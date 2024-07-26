@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="theme-color" content="#33474d">
+	<title>Zerotier-Archlinux-Termius互通教程 | Hexo</title>
+	<link rel="stylesheet" href="/css/style.css" />
+	
+      <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+    
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+
+	<header class="header">
+		<nav class="header__nav">
+			
+				<a href="/archives" class="header__link">Archive</a>
+			
+				<a href="/tags" class="header__link">Tags</a>
+			
+				<a href="/atom.xml" class="header__link">RSS</a>
+			
+		</nav>
+		<h1 class="header__title"><a href="/">Hexo</a></h1>
+		<h2 class="header__subtitle"></h2>
+	</header>
+
+	<main>
+		<article>
+	
+		<h1>Zerotier-Archlinux-Termius互通教程</h1>
+	
+	<div class="article__infos">
+		<span class="article__date">2024-07-24</span><br />
+		
+		
+			<span class="article__tags">
+			  	<a class="article__tag-none-link" href="/tags/Tool/" rel="tag">Tool</a>
+			</span>
+		
+	</div>
+
+	
+
+	
+		<p>使用Zerotier 和Termius 通过SSH创建个人PC服务器,并且用ipad连接Archlinux</p>
+<span id="more"></span>
+<h2 id="Zerotier的配置和使用"><a href="#Zerotier的配置和使用" class="headerlink" title="Zerotier的配置和使用"></a>Zerotier的配置和使用</h2><p>Zerotier 是一款不需要公网 IP 内网穿透软件，<code>ZeroTier</code> 是一个专门用来建立点对点虚拟专用网（<code>P2P VPN</code>）的工具，它提供在线管理界面和全平台的客户端，不需要复杂设置，只要安装客户端并加入到自己创建的网络即可。</p>
+<blockquote>
+<ol>
+<li>官方网站地址：<a target="_blank" rel="noopener" href="https://www.zerotier.com/">https://www.zerotier.com</a></li>
+</ol>
+</blockquote>
+<blockquote>
+<ol start="2">
+<li>项目地址：<a target="_blank" rel="noopener" href="https://github.com/zerotier">https://github.com/zerotier</a></li>
+</ol>
+</blockquote>
+<h2 id="注册和客户端安装"><a href="#注册和客户端安装" class="headerlink" title="注册和客户端安装"></a>注册和客户端安装</h2><h3 id="注册账号"><a href="#注册账号" class="headerlink" title="注册账号"></a>注册账号</h3><p>ZeroTier 可以通过邮箱或者 <code>Google</code> <code>Github</code> <code>Microsoft</code> 账号注册。</p>
+<p><figure class="figure"><img src="/assets/Pastedimage20240310163135.png"></figure></p>
+<p>进入 Zerotier 之后就可以创建你的 Networks。<code>NETWORK ID</code> 是客户端连接到行星服务器的唯一识别码，需要牢记, 即每个客户端需要 Join 的 ID, <code>NAME</code> 可以随意更改。</p>
+<p><figure class="figure"><img src="/assets/Pastedimage20240310163523.png"></figure></p>
+<h3 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h3><p><code>SUBNET</code> 是 <code>Zerotier One</code> 使用 <code>STUN</code> 和隧道建立的 <code>NAT</code>，可以更改内网 ip 网段。<code>NODES</code> 是连入 <code>NETWORK</code> 的设备数，以及建立时间 <code>CREATED</code>。</p>
+<p><figure class="figure"><img src="/assets/Pastedimage20240310164241.png"></figure></p>
+<h2 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h2><p><code>ZeroTier</code> 支持 <code>Windows</code>、<code>macOS</code>、<code>Linux</code> 三大桌面平台，<code>iOS</code>、<code>Android</code> 两大移动平台，<code>QNAP（威连通）</code>、<code>Synology（群晖）</code>、<code>Western Digital MyCloud NAS（西部数据）</code> 三个 <code>NAS</code> 平台，还支持 <code>OpenWrt/LEDE</code> 开源路由器项目。</p>
+<blockquote>
+<p>下载地址：<a target="_blank" rel="noopener" href="https://www.zerotier.com/download/">https://www.zerotier.com/download/</a></p>
+</blockquote>
+<p>这里以 <code>Ipad</code> 、<code>Andriod </code>、<code>Archlinux</code> 设备为例介绍一下客户端如何与 <code>planet</code> 相连接挂载到内网地址。</p>
+<p><code>ios</code> 设备通过 <code>Appstore</code> 下载，<code>Andriod</code> 设备通过下载地址下载即可。<code>Network ID</code>，配置好 <code>VPN</code> 后就会启动连接。</p>
+<p><code>SUBNET</code> 是 <code>Zerotier One</code> 使用 <code>STUN</code> 和隧道建立的 <code>NAT</code>，可以更改内网 ip 网段。<code>NODES</code> 是连入 <code>NETWORK</code> 的设备数，以及建立时间 <code>CREATED</code>。</p>
+<p><figure class="figure"><img src="/assets/IMG20240310165324.jpg"></figure></p>
+<p><figure class="figure"><img src="/assets/IMG20240310165324.jpg"></figure></p>
+<p><code>Android</code> 使用方法同理。</p>
+<figure class="figure"><img src=/assets/creenshot20240310165506.jpg width=60% /></figure>
+
+<figure class="figure"><img src=/assets/Screenshot_20240310_165517.jpg width=60% /></figure>
+
+<p><code>Archlinux</code> 在 <code>Termial</code> 中使用命令行下载和启动。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">安装zerotier-one</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> pacman -S zerotier-one</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">开启和加入开机自启</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">systemctl start zerotier-one.service</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash">systemctl <span class="built_in">enable</span> zerotier-one.service</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">加入、离开、列出网络</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> zerotier-cli <span class="built_in">join</span> [此处<span class="built_in">id</span>]</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> zerotier-cli leave</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> zerotier-cli listnetworks</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">获取地址和服务状态</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> zerotier-cli status</span></span><br><span class="line"> </span><br></pre></td></tr></table></figure>
+
+<p>这时会根据 <code>MAC</code> 地址分配给设备一个唯一认证字符串 <code>Node ID</code>，可用来在 <code>Web</code> 配置界面保留该设备不被删除以及帮助我们区分设备。我们在 <code>Auth?</code> 处勾上就可以让设备连接到 <code>planet</code> 中。</p>
+<p><figure class="figure"><img src="/assets/Pastedimage20240310170348.png"></figure></p>
+<h2 id="Ipad-SSH"><a href="#Ipad-SSH" class="headerlink" title="Ipad SSH"></a>Ipad SSH</h2><p>理论上来说在同一个局域网下 <code>ssh</code> 可以通过设备的 <code>IP</code> 地址来连接，此时我们通过 <code>Zerotier</code> 使不同局域网下的设备处于统一 <code>Networks</code> 下，只要 <code>ssh Managed IP</code> 即可完成设备间的互访。</p>
+<h3 id="Termius"><a href="#Termius" class="headerlink" title="Termius"></a>Termius</h3><p><code>Termius</code> 是一个非常好用的 <code>SSH</code> 客户端，免费版就已经提供了 <code>SSH</code> 功能，满足我们连接并操作 <code>Archlinux </code> 的需求。<code>IOS</code> 通过 <code>appstore</code> 下载，<code>Andriod</code> 通过 <code>google play</code> 商店下载，这里以 <code>ipad</code> 设备为例对 <code>archlinux</code> 设备进行访问。在 termius 的设置中要输入连接名称 alias (随便取)、IP 地址（这里你要访问设备的 Managed IP 地址，在 Zerotier 配置页面）、SSH 端口号、用户名与密码。</p>
+<p><figure class="figure"><img src="/assets/IMG20240310172148.jpg"></figure></p>
+<figure class="figure"><img src=/assets/IMG20240310171845.jpg width=60% /></figure>
+
+<h3 id="SSH"><a href="#SSH" class="headerlink" title="SSH"></a>SSH</h3><p>Archlinux 需要设置 SSH 服务，下载配置命令如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">下载SSH</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> pacman -S openssh</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">运行Open SSH</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> systemctl start sshd</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">查看Open SSH状态</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> systemctl status sshd</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">终止SSH服务器</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> systemctl stop sshd</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">系统重新启动时自动启动 SSH 服务器</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> systemctl <span class="built_in">enable</span> sshd</span></span><br><span class="line"><span class="meta prompt_"></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">从系统启动中删除</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> systemctl <span class="built_in">disable</span> sshd</span></span><br></pre></td></tr></table></figure>
+
+<p>下载配置启动 SSH 之后我们要对 SSH 配置文件中修改一些选项，以方便 ipad 或者其他设备可以连接到 linux服务器。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> nvim /etc/ssh/sshd_config</span> </span><br></pre></td></tr></table></figure>
+
+<p>我们可以在这个配置文件中修改我们的 SSH 端口，默认是 22。以及 Authentication 的状态，将 <code>PermitRootLogin</code> 设置为 <code>yes</code> 并且取消注释，就可以让访问设备打开 ROOT 权限。通过 <code>PubkeyAuthentication</code> 设置为 <code>yes</code> 那么只能允许服务器承认的 key 可以连接。修改完配置文件使用 <code>sudo systemctl restart sshd</code> 重新打开 ssh。</p>
+<figure class="figure"><img src=/assets/Pastedimage20240310173333.png width=40% /></figure>
+
+<figure class="figure"><img src=/assets/Pastedimage20240310173420.png width=40% /></figure>
+
+<figure class="figure"><img src=/assets/Pastedimage20240310173550.png width=100% /></figure>
+
+<h3 id="测试设备间互访"><a href="#测试设备间互访" class="headerlink" title="测试设备间互访"></a>测试设备间互访</h3><p>不同网络访问：<code>Archlinux</code> 连接 <code>5g</code> 网络，<code>iPad</code> 连接 <code>wifi</code>。</p>
+<p><figure class="figure"><img src="/assets/IMG20240310174149.jpg"></figure></p>
+<p>从图中我们可以看到已经成功连接上了 <code>Archlinux</code> 的 <code>SSH</code>。由于免费的根服务器在国外，可能访问速度不太稳定。 </p>
+<h2 id="笔记本不休眠"><a href="#笔记本不休眠" class="headerlink" title="笔记本不休眠"></a>笔记本不休眠</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"># 编辑文件</span><br><span class="line">$ sudo nvim /etc/systemd/logind.conf</span><br><span class="line"># 将其中</span><br><span class="line">#HandleLidSwitch=suspend</span><br><span class="line"># 去掉前面的#改成</span><br><span class="line">HandleLidSwitch=ignore</span><br><span class="line"># 最后重启服务</span><br><span class="line">$ </span><br></pre></td></tr></table></figure>
+
+	
+
+	
+		<span class="different-posts"><a href="/2024/07/24/Zerotier/" onclick="window.history.go(-1); return false;">⬅️ Go back </a></span>
+
+	
+
+</article>
+
+	</main>
+
+	<footer class="footer">
+	<div class="footer-content">
+		
+	      <div class="footer__element">
+	<p>Hi there, <br />welcome to my Blog glad you found it. Have a look around, will you?</p>
+</div>
+
+	    
+	      <div class="footer__element">
+	<h5>Check out</h5>
+	<ul class="footer-links">
+		<li class="footer-links__link"><a href="/archives">Archive</a></li>
+		
+		  <li class="footer-links__link"><a href="/atom.xml">RSS</a></li>
+	    
+		<li class="footer-links__link"><a href="/about">about page</a></li>
+		<li class="footer-links__link"><a href="/tags">Tags</a></li>
+		<li class="footer-links__link"><a href="/categories">Categories</a></li>
+	</ul>
+</div>
+
+	    
+
+		<div class="footer-credit">
+			<span>© 2024 John Doe | Powered by <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a> | Theme <a target="_blank" rel="noopener" href="https://github.com/HoverBaum/meilidu-hexo">MeiliDu</a></span>
+		</div>
+
+	</div>
+
+
+</footer>
+
+
+
+</body>
+
+</html>
