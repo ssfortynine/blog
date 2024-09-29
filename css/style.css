@@ -1517,51 +1517,59 @@ article .content .caption {
   content: ")";
 }
 .highlight {
-  background: #202746;
-  color: #979db4;
+  background: #222;
+  color: #aaa;
+}
+.highlight .code .subst {
+  color: #aaa;
+}
+.highlight .code .section {
+  color: #fff;
 }
 .highlight .code .comment,
-.highlight .code .quote {
-  color: #898ea4;
+.highlight .code .quote,
+.highlight .code .meta {
+  color: #444;
 }
-.highlight .code .variable,
-.highlight .code .template-variable,
-.highlight .code .attribute,
-.highlight .code .tag,
-.highlight .code .name,
-.highlight .code .regexp,
-.highlight .code .link,
-.highlight .code .selector-id,
-.highlight .code .selector-class {
-  color: #c94922;
+.highlight .code .string,
+.highlight .code .symbol,
+.highlight .code .bullet,
+.highlight .code .regexp {
+  color: #fc3;
 }
 .highlight .code .number,
-.highlight .code .meta,
+.highlight .code .addition {
+  color: #0c6;
+}
 .highlight .code .built_in,
 .highlight .code .builtin-name,
 .highlight .code .literal,
 .highlight .code .type,
-.highlight .code .params {
-  color: #c76b29;
-}
-.highlight .code .string,
-.highlight .code .symbol,
-.highlight .code .bullet {
-  color: #ac9739;
-}
-.highlight .code .title,
-.highlight .code .section {
-  color: #3d8fd1;
+.highlight .code .template-variable,
+.highlight .code .attribute,
+.highlight .code .link {
+  color: #32aaee;
 }
 .highlight .code .keyword,
-.highlight .code .selector-tag {
-  color: #6679cc;
+.highlight .code .selector-tag,
+.highlight .code .name,
+.highlight .code .selector-id,
+.highlight .code .selector-class {
+  color: #64a;
+}
+.highlight .code .title,
+.highlight .code .variable,
+.highlight .code .deletion,
+.highlight .code .template-tag {
+  color: #b16;
+}
+.highlight .code .section,
+.highlight .code .doctag,
+.highlight .code .strong {
+  font-weight: bold;
 }
 .highlight .code .emphasis {
   font-style: italic;
-}
-.highlight .code .strong {
-  font-weight: bold;
 }
 pre {
   overflow-x: auto;

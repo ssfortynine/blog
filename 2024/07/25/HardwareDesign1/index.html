@@ -6,19 +6,20 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="HandheldFriendly" content="True">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
-    <meta name="description" content="硬件加速设计方法：专题一 高质量VerilogHDL描述方法">
+    <meta name="description" content="硬件加速设计方法：专题一 高质量VerilogHDL描述方法 VerilogHDL 可综合描述VerilogHDL 是描述可综合的硬件电路HDL 语言具有以下的硬件设计的基本概念  互联 (connectivity) - wire 型变量描述各个模块之间的端口和网线连接关系 并发 (concurrency) - 可以有效地描述并行的硬件系统 时间 (time) - 定义了绝对和相对的时间度量，可综">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HardwareDesign1">
+<meta property="og:title" content="芯动力——硬件加速设计方法">
 <meta property="og:url" content="https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/index.html">
 <meta property="og:site_name" content="ssfortynine&#39;s Blog">
-<meta property="og:description" content="硬件加速设计方法：专题一 高质量VerilogHDL描述方法">
+<meta property="og:description" content="硬件加速设计方法：专题一 高质量VerilogHDL描述方法 VerilogHDL 可综合描述VerilogHDL 是描述可综合的硬件电路HDL 语言具有以下的硬件设计的基本概念  互联 (connectivity) - wire 型变量描述各个模块之间的端口和网线连接关系 并发 (concurrency) - 可以有效地描述并行的硬件系统 时间 (time) - 定义了绝对和相对的时间度量，可综">
 <meta property="og:locale" content="en_US">
-<meta property="og:image" content="https://ssfortynine.github.io/assets/Pasted_image_20231024202936.png">
+<meta property="og:image" content="https://ssfortynine.github.io/assets/Pastedimage20231024202936.png">
 <meta property="article:published_time" content="2024-07-24T19:51:43.000Z">
-<meta property="article:modified_time" content="2024-09-29T12:19:42.139Z">
+<meta property="article:modified_time" content="2024-09-29T14:23:42.253Z">
 <meta property="article:author" content="ssfortynine">
+<meta property="article:tag" content="FPGA">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://ssfortynine.github.io/assets/Pasted_image_20231024202936.png">
+<meta name="twitter:image" content="https://ssfortynine.github.io/assets/Pastedimage20231024202936.png">
     
     
       
@@ -38,7 +39,7 @@
       
     
     <!-- title -->
-    <title>HardwareDesign1</title>
+    <title>芯动力——硬件加速设计方法</title>
     <!-- async scripts -->
     <!-- Google Analytics -->
 
@@ -85,8 +86,6 @@
     <span id="actions">
       <ul>
         
-        <li><a class="icon" aria-label="Previous post" href="/2024/09/29/hello-world/"><i class="fa-solid fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
-        
         
         <li><a class="icon" aria-label="Next post" href="/2024/07/24/Zerotier/"><i class="fa-solid fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
         
@@ -102,16 +101,16 @@
     <div id="share" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&text=HardwareDesign1"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=HardwareDesign1"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&is_video=false&description=HardwareDesign1"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=HardwareDesign1&body=Check out this article: https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=HardwareDesign1"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=HardwareDesign1"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=HardwareDesign1"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=HardwareDesign1"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&name=HardwareDesign1&description=&lt;p&gt;硬件加速设计方法：专题一 高质量VerilogHDL描述方法&lt;/p&gt;"><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&t=HardwareDesign1"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&text=芯动力——硬件加速设计方法"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=芯动力——硬件加速设计方法"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&is_video=false&description=芯动力——硬件加速设计方法"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=芯动力——硬件加速设计方法&body=Check out this article: https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/"><i class="fa-solid fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=芯动力——硬件加速设计方法"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=芯动力——硬件加速设计方法"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=芯动力——硬件加速设计方法"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=芯动力——硬件加速设计方法"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&name=芯动力——硬件加速设计方法&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&t=芯动力——硬件加速设计方法"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
@@ -131,7 +130,7 @@
   <header>
     
     <h1 class="posttitle p-name" itemprop="name headline">
-        HardwareDesign1
+        芯动力——硬件加速设计方法
     </h1>
 
 
@@ -152,6 +151,11 @@
       
 
       
+    <div class="article-tag">
+        <i class="fa-solid fa-tag"></i>
+        <a class="p-category" href="/tags/FPGA/" rel="tag">FPGA</a>
+    </div>
+
 
     </div>
   </header>
@@ -159,22 +163,21 @@
 
   <div class="content e-content" itemprop="articleBody">
     <p>硬件加速设计方法：专题一 高质量VerilogHDL描述方法</p>
-<span id="more"></span>
 <h2 id="VerilogHDL-可综合描述"><a href="#VerilogHDL-可综合描述" class="headerlink" title="VerilogHDL 可综合描述"></a>VerilogHDL 可综合描述</h2><p>VerilogHDL 是描述可综合的硬件电路<br>HDL 语言具有以下的硬件设计的基本概念</p>
 <ul>
-<li><mark style="background: #FFB8EBA6;">互联 (connectivity)</mark> - wire 型变量描述各个模块之间的端口和网线连接关系</li>
-<li><mark style="background: #FFB8EBA6;">并发 (concurrency) </mark>- 可以有效地描述并行的硬件系统</li>
-<li><mark style="background: #FFB8EBA6;">时间 (time) </mark>- 定义了绝对和相对的时间度量，可综合操作符都是具有物理延时的</li>
+<li><strong>互联 (connectivity)</strong> - wire 型变量描述各个模块之间的端口和网线连接关系</li>
+<li><strong>并发 (concurrency) </strong>- 可以有效地描述并行的硬件系统</li>
+<li><strong>时间 (time) </strong>- 定义了绝对和相对的时间度量，可综合操作符都是具有物理延时的</li>
 </ul>
-<h2 id="Verilog-HDL-用于可综合描述的语句"><a href="#Verilog-HDL-用于可综合描述的语句" class="headerlink" title="Verilog HDL 用于可综合描述的语句"></a>Verilog HDL 用于可综合描述的语句</h2><h3 id="可用于综合的语句"><a href="#可用于综合的语句" class="headerlink" title="可用于综合的语句"></a>可用于综合的语句</h3><p><mark style="background: #FFF3A3A6;">always</mark><br><mark style="background: #FFF3A3A6;">if-else</mark>: 映射的硬件结构-多路选择器，输出结果由输入的选择确定</p>
+<h2 id="Verilog-HDL-用于可综合描述的语句"><a href="#Verilog-HDL-用于可综合描述的语句" class="headerlink" title="Verilog HDL 用于可综合描述的语句"></a>Verilog HDL 用于可综合描述的语句</h2><h3 id="可用于综合的语句"><a href="#可用于综合的语句" class="headerlink" title="可用于综合的语句"></a>可用于综合的语句</h3><p><strong>always</strong><br><strong>if-else</strong>: 映射的硬件结构-多路选择器，输出结果由输入的选择确定</p>
 <ul>
-<li>代码和电路是互相等价的。<mark style="background: #FFB8EBA6;">硬件结构比较复杂，以及控制通道的延迟</mark>等。代码在书写的时候就要注意<mark style="background: #FFB8EBA6;">综合电路的性能最优化</mark>，要综合考虑硬件电路的性能和结构。</li>
-<li>要根据输入约束，小心设计：<mark style="background: #FFF3A3A6;">先”加”后“选”</mark>，还是<mark style="background: #FFF3A3A6;">先”选”后“加”</mark></li>
-<li><mark style="background: #FFB8EBA6;">单 if 语句</mark>：无优先级的判断结构，描述多条件判断结构</li>
-<li><mark style="background: #FFB8EBA6;">多 if 语句</mark>：有优先级的判断结构，<mark style="background: #FFF3A3A6;">最后一级信号具有最高优先级，具有优先级的多选结构会消耗组合逻辑</mark>。若某些设计中，有些信号要求先到达（如<mark style="background: #BBFABBA6;">关键使能信号、选择信号</mark>等），有些信号要求后到达（如<mark style="background: #BBFABBA6;">慢速信号、有效时间较长的信号</mark>等），此时需要使用 if..if 语句。设计方法：最高优先级给最迟到达的关键信号<br><mark style="background: #FFF3A3A6;">case</mark>：无优先级的判断结构，与单 if 语句的区别是条件互斥，通常用于指令编码译码电路<br><mark style="background: #FFF3A3A6;">assign</mark></li>
+<li>代码和电路是互相等价的。<strong>硬件结构比较复杂，以及控制通道的延迟</strong>等。代码在书写的时候就要注意<strong>综合电路的性能最优化</strong>，要综合考虑硬件电路的性能和结构。</li>
+<li>要根据输入约束，小心设计：<strong>先”加”后“选”</strong>，还是<strong>先”选”后“加”</strong></li>
+<li><strong>单 if 语句</strong>：无优先级的判断结构，描述多条件判断结构</li>
+<li><strong>多 if 语句</strong>：有优先级的判断结构，<strong>最后一级信号具有最高优先级，具有优先级的多选结构会消耗组合逻辑</strong>。若某些设计中，有些信号要求先到达（如<strong>关键使能信号、选择信号</strong>等），有些信号要求后到达（如<strong>慢速信号、有效时间较长的信号</strong>等），此时需要使用 if..if 语句。设计方法：最高优先级给最迟到达的关键信号<br><strong>case</strong>：无优先级的判断结构，与单 if 语句的区别是条件互斥，通常用于指令编码译码电路<br><strong>assign</strong></li>
 </ul>
-<h3 id="不可用于综合的语句"><a href="#不可用于综合的语句" class="headerlink" title="不可用于综合的语句"></a>不可用于综合的语句</h3><p><mark style="background: #FFF3A3A6;">function</mark>、<mark style="background: #FFF3A3A6;">for </mark>、<mark style="background: #FFF3A3A6;">fork-join</mark>、<mark style="background: #FFF3A3A6;">while</mark></p>
-<h3 id="Latch和D触发器"><a href="#Latch和D触发器" class="headerlink" title="Latch和D触发器"></a>Latch和D触发器</h3><p>一般情况下避免使用 latch (锁存器)，一般只有在异步电路和门控时钟时会用到 latch<br><img src="/assets/Pasted_image_20231024202936.png"><br>latch 是电平触发，非同步控制。DFF 由时钟沿触发，同步控制。Latch 容易产生毛刺（glitch），而 DFF 不易产生毛刺。<br>latch 将 STA 变得复杂。因为 Latch 不能过滤毛刺，对下一级电路极其危险，所以避免产生 Latch, 尽可能使用 D 触发器</p>
+<h3 id="不可用于综合的语句"><a href="#不可用于综合的语句" class="headerlink" title="不可用于综合的语句"></a>不可用于综合的语句</h3><p><strong>function</strong>、<strong>for </strong>、<strong>fork-join</strong>、<strong>while</strong></p>
+<h3 id="Latch和D触发器"><a href="#Latch和D触发器" class="headerlink" title="Latch和D触发器"></a>Latch和D触发器</h3><p>一般情况下避免使用 latch (锁存器)，一般只有在异步电路和门控时钟时会用到 latch<br><img src="/assets/Pastedimage20231024202936.png" alt=""><br>latch 是电平触发，非同步控制。DFF 由时钟沿触发，同步控制。Latch 容易产生毛刺（glitch），而 DFF 不易产生毛刺。<br>latch 将 STA 变得复杂。因为 Latch 不能过滤毛刺，对下一级电路极其危险，所以避免产生 Latch, 尽可能使用 D 触发器</p>
 <h3 id="避免产生-Latch-的措施"><a href="#避免产生-Latch-的措施" class="headerlink" title="避免产生 Latch 的措施"></a>避免产生 Latch 的措施</h3><p>易引入 latch 的途径：使用不完备的条件判断语句（if-else 语句缺少 else、case 语句缺少 default）</p>
 <blockquote>
 <p>防止产生 latch 的措施</p>
@@ -184,7 +187,7 @@
 <li>仔细检查综合器生成的报告，latch 会以 warning 的形式报告</li>
 </ol>
 </blockquote>
-<h3 id="full-case-和-parallel-case-综合器指令"><a href="#full-case-和-parallel-case-综合器指令" class="headerlink" title="full-case 和 parallel-case 综合器指令"></a>full-case 和 parallel-case 综合器指令</h3><p>有时会出现设计目标缘故产生 Latch<br>full-case: 告诉综合器，当前 case 结构所列条件已完备(<code>//synopsys full_case</code>)<br>parallel-case: 告诉 DC，所有条件均互斥，且并行，无优先权(<code>//synopsys parallel_case</code>)</p>
+<h3 id="full-case-和-parallel-case-综合器指令"><a href="#full-case-和-parallel-case-综合器指令" class="headerlink" title="full-case 和 parallel-case 综合器指令"></a>full-case 和 parallel-case 综合器指令</h3><p>有时会出现设计目标缘故产生 Latch<br><code>full-case</code>: 告诉综合器，当前 case 结构所列条件已完备(<code>//synopsys full_case</code>)<br><code>parallel-case</code>: 告诉 DC，所有条件均互斥，且并行，无优先权(<code>//synopsys parallel_case</code>)</p>
 <p><strong>逻辑复制-&gt;均衡负载</strong><br>通过逻辑复制，降低关键信号的扇出，进而降低该信号的传播延迟，提高电路性能</p>
 <p><strong>资源共享-&gt;减小面积</strong><br>一般进行资源共享会减小电路面积，但是性能会下降，要综合考虑性能和面积而进行取舍</p>
 <p><strong>资源顺序重排-&gt;降低传播延时</strong><br>如果一个输入信号来的晚我们可以尽可能的把它放在后面，隐藏其延迟</p>
@@ -215,36 +218,36 @@
 </ul>
 <h3 id="在-RTL-书写中如何考虑延迟、面积等"><a href="#在-RTL-书写中如何考虑延迟、面积等" class="headerlink" title="在 RTL 书写中如何考虑延迟、面积等"></a>在 RTL 书写中如何考虑延迟、面积等</h3><p><strong>在 RTL 代码中考虑时</strong></p>
 <ul>
-<li>针对控制信号来到比较晚，尽可能<mark style="background: #FFB86CA6;">将延时较大的分支单独拿出来，放在出口最近的选择器中</mark></li>
-<li>注意<mark style="background: #FFB86CA6;">“先加后选”</mark>和<mark style="background: #FFB86CA6;">“先选后加”</mark></li>
-<li><mark style="background: #FFB86CA6;">加法器、乘法器等复杂的器件少用</mark></li>
-<li>减少设计面积：首先要估计使用设计资源的数量，比如使用了多少触发器、加法器、乘法器。可以借助工具，<mark style="background: #FFB86CA6;">最终应该知道在设计中哪些部分占了较大的面积，进而分析和改进</mark></li>
-<li>一般来说触发器由功能决定，很难减少，只能从组合逻辑出发。对于 RTL 代码，就是各种操作符，应该了解<mark style="background: #FFB86CA6;">各种操作符对应的电路</mark>，如使用<mark style="background: #FFB8EBA6;">“+”、”-“、”x”、”&#x2F;“</mark>以及一些条件语句中的比较运算，对于这些操作，<mark style="background: #FFB86CA6;">首先判断其必要性，是否能用更简单的方法解决</mark></li>
-<li>如果必须使用复杂的运算符，应考虑<mark style="background: #FFB86CA6;">资源共享</mark>，从代码出发，而不是只依靠综合器</li>
+<li>针对控制信号来到比较晚，尽可能<strong>将延时较大的分支单独拿出来，放在出口最近的选择器中</strong></li>
+<li>注意<strong>“先加后选”</strong>和<strong>“先选后加”</strong></li>
+<li><strong>加法器、乘法器等复杂的器件少用</strong></li>
+<li>减少设计面积：首先要估计使用设计资源的数量，比如使用了多少触发器、加法器、乘法器。可以借助工具，<strong>最终应该知道在设计中哪些部分占了较大的面积，进而分析和改进</strong></li>
+<li>一般来说触发器由功能决定，很难减少，只能从组合逻辑出发。对于 RTL 代码，就是各种操作符，应该了解<strong>各种操作符对应的电路</strong>，如使用<strong>“+”、”-“、”x”、”/“</strong>以及一些条件语句中的比较运算，对于这些操作，<strong>首先判断其必要性，是否能用更简单的方法解决</strong></li>
+<li>如果必须使用复杂的运算符，应考虑<strong>资源共享</strong>，从代码出发，而不是只依靠综合器</li>
 <li>多比特的信号也会占用大量的资源，针对不同的设计有不同的改进方法，对于有可能简化的地方尽可能简化，<u>逻辑简化的同时也对应面积减少和时延减少</u></li>
 </ul>
 <p><strong>对于功耗控制</strong></p>
 <ul>
-<li><mark style="background: #FFB86CA6;">门控时钟</mark>，时钟电路的翻转消耗大量资源，此时可以使用门控时钟，减少时钟电路的翻转</li>
-<li><mark style="background: #FFB86CA6;">增加使能信号</mark>，使得部分电路只有工作的时候才工作，与门控时钟的差别在与，使用使能信号只使得被控制的电路不再工作，但是其时钟仍然在工作，而门控时钟是使时钟停止工作</li>
-<li><mark style="background: #FFB86CA6;">对芯片各个模块进行控制，只有工作的时候才使用</mark></li>
-<li>除了有用信号和时钟的翻转会消耗功耗，组合逻辑的毛刺也会大量消耗功耗，但是在设计过程中毛刺是不可避免的，但是要尽量<mark style="background: #FFB86CA6;">减少毛刺的传播</mark>，才可以减少功耗。</li>
-<li>有限状态机，通过<mark style="background: #FFB86CA6;">低功耗编码</mark>来减少电路的翻转，比如独热码</li>
+<li><strong>门控时钟</strong>，时钟电路的翻转消耗大量资源，此时可以使用门控时钟，减少时钟电路的翻转</li>
+<li><strong>增加使能信号</strong>，使得部分电路只有工作的时候才工作，与门控时钟的差别在与，使用使能信号只使得被控制的电路不再工作，但是其时钟仍然在工作，而门控时钟是使时钟停止工作</li>
+<li><strong>对芯片各个模块进行控制，只有工作的时候才使用</strong></li>
+<li>除了有用信号和时钟的翻转会消耗功耗，组合逻辑的毛刺也会大量消耗功耗，但是在设计过程中毛刺是不可避免的，但是要尽量<strong>减少毛刺的传播</strong>，才可以减少功耗。</li>
+<li>有限状态机，通过<strong>低功耗编码</strong>来减少电路的翻转，比如独热码</li>
 <li>在 RTL 编码阶段对布局布线进行考虑，避免无法布通的情况。<u>如果采用大的 mux，可以将其分解为多级较小的 mux。</u></li>
 </ul>
 <h2 id="RTL-设计指导规则"><a href="#RTL-设计指导规则" class="headerlink" title="RTL 设计指导规则"></a>RTL 设计指导规则</h2><ul>
-<li>RTL 级的设计评判标准很多，如<mark style="background: #FFB86CA6;">时序性能、所占面积、可测试性、可重用性、功耗、时钟域的分配、复位信号设计以及与所用 EDA 工具匹配等</mark>。</li>
+<li>RTL 级的设计评判标准很多，如<strong>时序性能、所占面积、可测试性、可重用性、功耗、时钟域的分配、复位信号设计以及与所用 EDA 工具匹配等</strong>。</li>
 <li>一般的指导原则：面积与速度互换、乒乓操作、流水线设计</li>
 </ul>
-<h3 id="面积与速度互换"><a href="#面积与速度互换" class="headerlink" title="面积与速度互换"></a>面积与速度互换</h3><p>面积：一个设计所消耗的目标器件的<mark style="background: #FFB86CA6;">硬件资源数量</mark>或者 <mark style="background: #FFB86CA6;">ASIC 芯片面积</mark></p>
+<h3 id="面积与速度互换"><a href="#面积与速度互换" class="headerlink" title="面积与速度互换"></a>面积与速度互换</h3><p>面积：一个设计所消耗的目标器件的<strong>硬件资源数量</strong>或者 <strong>ASIC 芯片面积</strong></p>
 <ul>
-<li>FPGA 可以用所消耗的<mark style="background: #FF5582A6;">触发器CFF</mark> 和<mark style="background: #FF5582A6;">查找表数量</mark>来衡量<br>速度：设计在芯片上稳定运行时所能达到的最高频率，这个频率一般由设计的时序状况来决定</li>
-<li>时序特征向量：<mark style="background: #FFB86CA6;">时钟周期，PAD to PAD time，Clock setup time, Clock hold time, Clock-to-Output Delay</mark><br>科学的设计目标：</li>
+<li>FPGA 可以用所消耗的&lt;=”background: #FF5582A6;”&gt;触发器CFF<strong> 和</strong>查找表数量**来衡量<br>速度：设计在芯片上稳定运行时所能达到的最高频率，这个频率一般由设计的时序状况来决定</li>
+<li>时序特征向量：<strong>时钟周期，PAD to PAD time，Clock setup time, Clock hold time, Clock-to-Output Delay</strong><br>科学的设计目标：</li>
 <li><u>在满足设计时序的要求（包含对设计的最高频率要求）的前提下，占用最小的芯片面积。</u></li>
 <li><u>在所规定的面积下，使设计的时序余量更大，频率更高。</u></li>
 <li>如果设计的时序余量更大，频率更高——设计的健壮性更强, 整个系统的设计质量更有保证</li>
 <li>设计所消耗的面积小——在单位芯片上实现的功能更多，需要的芯片数量更少，成本更低</li>
-<li>满足时序和工作频率的要求更高，即速度优先<img src=/assets/Pasted_image_20231025195027.png width=80% /></li>
+<li>满足时序和工作频率的要求更高，即速度优先<br><img src=/assets/Pastedimage20231025195027.png width=80% /></li>
 </ul>
 <blockquote>
 <p>速度与面积互换</p>
@@ -263,45 +266,66 @@
 </ol>
 </blockquote>
 <h3 id="乒乓操作"><a href="#乒乓操作" class="headerlink" title="乒乓操作"></a>乒乓操作</h3><ul>
-<li>乒乓操作一个常常用于数据流控制的处理方法<img src=/assets/Pasted_image_20231025195210.png width=80% /></li>
-<li><mark style="background: #FFB86CA6;">节约缓冲区</mark></li>
-<li><mark style="background: #FFB86CA6;">巧妙运用乒乓操作可以做到低速模块处理高速数据流的效果</mark></li>
+<li>乒乓操作一个常常用于数据流控制的处理方法<br><img src=/assets/Pastedimage20231025195210.png width=80% /></li>
+<li><strong>节约缓冲区</strong></li>
+<li><strong>巧妙运用乒乓操作可以做到低速模块处理高速数据流的效果</strong></li>
 </ul>
 <h3 id="流水线"><a href="#流水线" class="headerlink" title="流水线"></a>流水线</h3><ul>
-<li><p>电路的最高频率取决于最长的组合逻辑链路的延迟值</p>
-<img src=/assets/Pasted_image_20231025200113.png width=80% />
+<li><p>电路的最高频率取决于最长的组合逻辑链路的延迟值<br><img src=/assets/Pastedimage20231025200113.png width=80% /></p>
 </li>
-<li><p>流水线当方法可以有效提高系统的工作频率，但是考虑一个电路的性能通常都是<mark style="background: #FF5582A6;">其单位时间的计算量，或者是一定计算总量下的处理时间</mark></p>
-<img src=/assets/Pasted_image_20231025200349.png width=80% /></li>
+<li><p>流水线当方法可以有效提高系统的工作频率，但是考虑一个电路的性能通常都是&lt;=”background: #FF5582A6;”&gt;其单位时间的计算量，或者是一定计算总量下的处理时间**<br><img src=/assets/Pastedimage20231025200349.png width=80% /></p>
+</li>
 </ul>
 <p><strong>特点</strong></p>
 <ul>
-<li>通过<mark style="background: #FFB86CA6;">插入寄存器</mark>，将长的串行逻辑链分成较小的部分</li>
+<li>通过<strong>插入寄存器</strong>，将长的串行逻辑链分成较小的部分</li>
 <li>当系统运算是串行时，利用时钟控制，使运算依照顺序接续执行</li>
 <li>在任何制定时刻，大部分电路都在运行</li>
 </ul>
 <p><strong>好处</strong></p>
 <ul>
-<li><mark style="background: #FFB86CA6;">每一部分延时更小-&gt;可使用更快的时钟</mark></li>
-<li><mark style="background: #FFB86CA6;">大部分电路同时进行计算-&gt;可提高数据通过量（吞吐量）</mark></li>
+<li><strong>每一部分延时更小-&gt;可使用更快的时钟</strong></li>
+<li><strong>大部分电路同时进行计算-&gt;可提高数据通过量（吞吐量）</strong></li>
 </ul>
 <p><strong>流水线参数设计</strong></p>
 <ul>
 <li>系统时钟取决于最慢的流水线级的延时<ul>
-<li>流水线时钟周期：$$T_{pipe} &#x3D; max{T_1,T_2,…,T_m}$$</li>
-<li>第 i 级的时钟周期：$$T_i&gt;t_ff+…+t_{su}+t_{d,i}+t_{s,i}+1$$</li>
+<li>流水线时钟周期：<script type="math/tex; mode=display">T_{pipe} = max{T_1,T_2,...,T_m}</script></li>
+<li>第 i 级的时钟周期：<script type="math/tex; mode=display">T_i>t_ff+...+t_{su}+t_{d,i}+t_{s,i}+1</script></li>
 </ul>
 </li>
 <li>流水线分割点及参数确定要考虑的因素<ul>
-<li><mark style="background: #FFB8EBA6;">单位延迟时间及时间频率的大小决定了数据通过速率</mark></li>
-<li><mark style="background: #FFB8EBA6;">过多的级数不一定能产生最快的结果</mark></li>
-<li><mark style="background: #FFB8EBA6;">太多的寄存器的插入会导致芯片面积的增加，布线困难，时钟偏差增加</mark></li>
+<li><strong>单位延迟时间及时间频率的大小决定了数据通过速率</strong></li>
+<li><strong>过多的级数不一定能产生最快的结果</strong></li>
+<li><strong>太多的寄存器的插入会导致芯片面积的增加，布线困难，时钟偏差增加</strong></li>
 </ul>
 </li>
 </ul>
 
   </div>
 </article>
+
+
+
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/mathjax@2.7.8/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
 
 
 
@@ -335,16 +359,16 @@
     <div id="share-footer" style="display: none">
       <ul>
   <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&text=HardwareDesign1"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=HardwareDesign1"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&is_video=false&description=HardwareDesign1"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" href="mailto:?subject=HardwareDesign1&body=Check out this article: https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=HardwareDesign1"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=HardwareDesign1"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=HardwareDesign1"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=HardwareDesign1"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&name=HardwareDesign1&description=&lt;p&gt;硬件加速设计方法：专题一 高质量VerilogHDL描述方法&lt;/p&gt;"><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
-  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&t=HardwareDesign1"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&text=芯动力——硬件加速设计方法"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=芯动力——硬件加速设计方法"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&is_video=false&description=芯动力——硬件加速设计方法"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=芯动力——硬件加速设计方法&body=Check out this article: https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/"><i class="fa-solid fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=芯动力——硬件加速设计方法"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=芯动力——硬件加速设计方法"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=芯动力——硬件加速设计方法"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&title=芯动力——硬件加速设计方法"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&name=芯动力——硬件加速设计方法&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/&t=芯动力——硬件加速设计方法"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
 </ul>
 
     </div>
