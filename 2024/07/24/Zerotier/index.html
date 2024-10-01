@@ -22,7 +22,7 @@
 <meta property="og:image" content="https://ssfortynine.github.io/assets/IMG20240310172148.jpg">
 <meta property="og:image" content="https://ssfortynine.github.io/assets/IMG20240310174149.jpg">
 <meta property="article:published_time" content="2024-07-24T06:23:09.000Z">
-<meta property="article:modified_time" content="2024-09-29T14:19:45.888Z">
+<meta property="article:modified_time" content="2024-09-29T14:25:59.821Z">
 <meta property="article:author" content="ssfortynine">
 <meta property="article:tag" content="Tool">
 <meta name="twitter:card" content="summary">
@@ -216,7 +216,7 @@
 <h3 id="测试设备间互访"><a href="#测试设备间互访" class="headerlink" title="测试设备间互访"></a>测试设备间互访</h3><p>不同网络访问：<code>Archlinux</code> 连接 <code>5g</code> 网络，<code>iPad</code> 连接 <code>wifi</code>。</p>
 <p><img src="/assets/IMG20240310174149.jpg" alt=""></p>
 <p>从图中我们可以看到已经成功连接上了 <code>Archlinux</code> 的 <code>SSH</code>。由于免费的根服务器在国外，可能访问速度不太稳定。 </p>
-<h2 id="笔记本不休眠"><a href="#笔记本不休眠" class="headerlink" title="笔记本不休眠"></a>笔记本不休眠</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">编辑文件</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> nvim /etc/systemd/logind.conf</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将其中</span></span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">HandleLidSwitch=<span class="built_in">suspend</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">去掉前面的#改成</span></span><br><span class="line">HandleLidSwitch=ignore</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">最后重启服务</span></span><br></pre></td></tr></table></figure>
+<h2 id="笔记本不休眠"><a href="#笔记本不休眠" class="headerlink" title="笔记本不休眠"></a>笔记本不休眠</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">编辑文件</span></span><br><span class="line"><span class="meta prompt_">$ </span><span class="language-bash"><span class="built_in">sudo</span> nvim /etc/systemd/logind.conf</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">将其中</span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">HandleLidSwitch=<span class="built_in">suspend</span></span></span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">去掉前面的#改成</span></span><br><span class="line">HandleLidSwitch=ignore</span><br><span class="line"><span class="meta prompt_"># </span><span class="language-bash">最后重启服务</span></span><br></pre></td></tr></table></figure>
 
   </div>
 </article>
