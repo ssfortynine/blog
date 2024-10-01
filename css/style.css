@@ -833,10 +833,12 @@ body {
   clear: both;
   overflow: auto;
   margin-top: 1rem;
-  padding-right: 2rem;
-  max-width: 20em;
+  padding-left: 16px;
   max-height: calc(95vh - 7rem);
-  text-align: right;
+  text-align: left;
+  border-left: 1px solid var(--vp-c-divider);
+  font-size: 13px;
+  position: relative;
 }
 #header-post #toc a:hover {
   color: #d480aa;
