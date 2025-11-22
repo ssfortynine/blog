@@ -4,6 +4,25 @@
   
     
     <entry>
+      <title>Obsidian-NAS极空间-Cpolar同步</title>
+      <link href="/2025/11/21/Obsidian-NAS%E6%9E%81%E7%A9%BA%E9%97%B4-Cpolar%E5%90%8C%E6%AD%A5/"/>
+      <url>/2025/11/21/Obsidian-NAS%E6%9E%81%E7%A9%BA%E9%97%B4-Cpolar%E5%90%8C%E6%AD%A5/</url>
+      
+        <content type="html"><![CDATA[<h2 id="试错-Tailscale-多端同步"><a href="#试错-Tailscale-多端同步" class="headerlink" title="试错 Tailscale 多端同步"></a>试错 Tailscale 多端同步</h2><ul><li><a href="https://post.smzdm.com/p/agqd5k87/p2/?sort_tab=hot/#comments">教程：使用tailscale内网穿透访问你家的极空间</a><br>根据网上的一些教程，通过使用 Tailscale 与 NAS 极空间完成多平台的同步，但是失败了，无法连接到公网。</li></ul><h2 id="使用-Cpolar-同步"><a href="#使用-Cpolar-同步" class="headerlink" title="使用 Cpolar 同步"></a>使用 Cpolar 同步</h2><p><code>Cpolar</code> 比 Tailscale 操作简单很多，只需要下载，以及注册一个账号即可，剩下不需要什么操作。这个教程，省略了使用 <code>Cpolar</code> 的内容</p><ul><li><a href="https://zhuanlan.zhihu.com/p/702018896">教程：极空间+obsidian 同步</a></li></ul><h3 id="在-NAS-极空间中搜索-docker-仓库-Cpolar（踩坑）"><a href="#在-NAS-极空间中搜索-docker-仓库-Cpolar（踩坑）" class="headerlink" title="在 NAS 极空间中搜索 docker 仓库 Cpolar（踩坑）"></a>在 NAS 极空间中搜索 docker 仓库 Cpolar（踩坑）</h3><p>根据教程，在 NAS 极空间 docker 仓库中搜索出来的 Cpolar 部署的容器无法正常运行，一直在重启</p><ul><li><a href="https://www.bilibili.com/opus/978709685396832281">教程：Cpolar 极空间 docker 部署</a></li></ul><h3 id="使用-SSH-安装-Cpolar"><a href="#使用-SSH-安装-Cpolar" class="headerlink" title="使用 SSH 安装 Cpolar"></a>使用 SSH 安装 Cpolar</h3><p>换了一种方式通过 <code>SSH</code> 连接到 NAS 极空间中，下载 Cpolar 运行即可</p><ul><li><a href="https://mp.weixin.qq.com/s/S9vwpHMeXT3sHs8NbJdrzA">教程：极空间 SSH 公网配置</a></li></ul><p>根据上述教程中的配置，将极空间内的 SSH 设置打开，连接到客户端上之后，在本地安装 cpolar<br><img src="/assets/file-20251121155439308.png" alt="alt text"></p><blockquote><p>[!tip] 什么是 cpolar<br>Cpolar 是一款强大的内网穿透工具，无需公网 IP、无需路由器设置，只需要在本地设备上运行一个客户端，就能将内网的 SSH 服务安全地映射到一个公网可访问的地址</p></blockquote><p><strong>以下是安装cpolar 步骤：</strong><br>官网在此：<a href="https://www.cpolar.com/">https://www.cpolar.com</a><br>使用一键脚本安装命令：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> curl https://get.cpolar.sh | sh</span><br></pre></td></tr></table></figure><br>安装完成后，执行下方命令查看cpolar服务状态：（如图所示即为正常启动）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">sudo</span> systemctl status cpolar</span><br></pre></td></tr></table></figure><br>Cpolar安装和成功启动服务后，在浏览器上输入虚拟机主机IP（打开 WebDev 时显示的 IP）加9200端口。</p><p>例如：<code>http://192.168.5.24:9200</code>，访问Cpolar管理界面，使用Cpolar官网注册的账号登录,登录后即可看到cpolar web 配置界面,接下来在web 界面配置即可。</p><p>打开浏览器访问本地9200端口，使用cpolar账户密码登录即可,登录后即可对隧道进行管理。<br><img src="assets/file-20251121160152844.png" alt=""></p><h3 id="配置公网地址"><a href="#配置公网地址" class="headerlink" title="配置公网地址"></a>配置公网地址</h3><p>通过配置，你可以在本地 WSL 或 Linux 系统上运行 SSH 服务，并通过 Cpolar 将其映射到公网，从而实现从任意设备远程连接开发环境的目的。</p><ul><li>隧道名称：可自定义，本例使用 obsidian，注意不要与已有的隧道名称重复</li><li>协议：http</li><li>本地地址：192.168.5.24:5005</li><li>域名类型：随机域名（其他需要收费，所以有的时候域名会变就要自己更改了）</li><li>地区：China Top</li></ul><p><img src="/assets/file-20251121160600915.png" alt="alt text"><br>创建成功后，打开左侧在线隧道列表,可以看到刚刚通过创建隧道生成了公网地址，接下来就可以在其他电脑或者移动端设备（异地）上，使用任意一个地址在终端中访问即可。</p><ul><li>Http 表示使用的协议类型</li><li><code>http://788cb346.r29.cpolar.top</code> 是 Cpolar 提供的域名</li></ul><p><img src="/assets/file-20251121160757795.png" alt="alt text"></p><h3 id="打开-Obsidian-的-Remotely-Save-插件（踩坑）"><a href="#打开-Obsidian-的-Remotely-Save-插件（踩坑）" class="headerlink" title="打开 Obsidian 的 Remotely Save 插件（踩坑）"></a>打开 Obsidian 的 Remotely Save 插件（踩坑）</h3><p>打开 Obsidian 的 Remotely Save 插件开始同步<br><img src="/assets/file-20251121161245775.png" alt="alt text"><br><strong>问题</strong>：如果将隧道地址填写进服务器地址进行检查的时候显示连接不上这个服务器。<br><strong>解决</strong>：必须在隧道地址后面添加 NAS 极空间的目录地址(比如:<code>http://xxx/public/Public/docker/cpolar</code>)，此时检查才能通过<br><img src="/assets/file-20251121161509981.png" alt="alt text"></p><h3 id="缺陷——域名更新"><a href="#缺陷——域名更新" class="headerlink" title="缺陷——域名更新"></a>缺陷——域名更新</h3><p>因为 Cpolar 的域名固定都是需要花钱的，所以免费的就只能自己更新域名了</p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Obsidian </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>芯动力——硬件加速设计方法</title>
       <link href="/2024/07/25/HardwareDesign1/"/>
       <url>/2024/07/25/HardwareDesign1/</url>

@@ -1,0 +1,9 @@
+https://ssfortynine.github.io/blog/2025/11/21/Obsidian-NAS%E6%9E%81%E7%A9%BA%E9%97%B4-Cpolar%E5%90%8C%E6%AD%A5/
+https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/
+https://ssfortynine.github.io/blog/2024/07/24/Zerotier/
+https://ssfortynine.github.io/blog/about/index.html
+https://ssfortynine.github.io/blog/search/index.html
+https://ssfortynine.github.io/blog
+https://ssfortynine.github.io/blog/tags/FPGA/
+https://ssfortynine.github.io/blog/tags/Tool/
+https://ssfortynine.github.io/blog/tags/Obsidian/
