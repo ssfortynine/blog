@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 /**
  * 1. Set default font family to sans-serif.
@@ -502,6 +503,7 @@ header .nav-list-item a {
   margin: 5em auto;
 }
 .archive .post-item {
+  display: inline-block;
   padding: 2px 0 0 50px;
 }
 .archive .post-time,
@@ -838,6 +840,79 @@ pre .xml .cdata {
   opacity: 0.5;
 }
 
+#toc {
+  position: fixed;
+  right: 2rem;
+  top: 8rem;
+  z-index: 99;
+  display: inline-block;
+  width: 18rem;
+  max-height: 85vh;
+  overflow-y: auto;
+  text-align: right;
+  font-size: 13px;
+  line-height: 1.5;
+  scrollbar-width: none;
+}
+#toc::-webkit-scrollbar {
+  display: none;
+}
+#toc ol {
+  list-style: none !important; /* 强制去掉数字 */
+  margin: 0;
+  padding: 0; /* 去掉默认的左内边距 */
+}
+#toc a.toc-link {
+  display: block;
+  color: #999;
+  text-decoration: none;
+  transition: all 0.2s;
+  padding: 2px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#toc a.toc-link:hover {
+  color: #42b983; /* Apollo 蓝 */
+}
+#toc .toc-level-1 {
+  display: none;
+}
+#toc .toc-level-2 {
+  margin-top: 8px;
+}
+#toc .toc-level-2 > a.toc-link {
+  color: #555;
+  font-weight: bold;
+}
+#toc .toc-level-2 > a.toc-link:before {
+  content: "# ";
+  color: #42b983;
+  font-weight: normal;
+  margin-right: 4px;
+}
+#toc .toc-level-3 {
+  padding-right: 10px;
+  font-size: 12px;
+}
+#toc .toc-level-4, #toc .toc-level-5, #toc .toc-level-6 {
+  display: none;
+}
+#toc .toc-number {
+  display: none;
+}
+#toc .toc-item.active > a.toc-link {
+  color: #2da0f9;
+  border-right: 3px solid #2da0f9;
+  padding-right: 8px;
+  margin-right: -2rem;
+}
+
+@media screen and (max-width: 1300px) {
+  #toc {
+    display: none;
+  }
+}
 .paginator {
   margin: 4em 0;
   text-align: center;
