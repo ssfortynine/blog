@@ -2,9 +2,108 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
-    <loc>https://ssfortynine.github.io/blog/2025/11/25/Nixos-vnc/</loc>
+    <loc>https://ssfortynine.github.io/blog/2025/12/18/Nix-chisel-nix/</loc>
     
-    <lastmod>2025-11-27</lastmod>
+    <lastmod>2025-12-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://ssfortynine.github.io/blog/2025/12/18/Rust-net-monitor/</loc>
+    
+    <lastmod>2025-12-18</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-vaughn_betz/</loc>
+    
+    <lastmod>2025-12-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-LL-ViT/</loc>
+    
+    <lastmod>2025-12-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-Toward-Domain/</loc>
+    
+    <lastmod>2025-12-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-da4ml/</loc>
+    
+    <lastmod>2025-12-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-Poco/</loc>
+    
+    <lastmod>2025-12-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-OpenDRAM/</loc>
+    
+    <lastmod>2025-12-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-Fusion-SoC-Workshop/</loc>
+    
+    <lastmod>2025-12-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-AMD-Turtorial/</loc>
+    
+    <lastmod>2025-12-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-Shouyi_Yin/</loc>
+    
+    <lastmod>2025-12-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-Wei_Zhang/</loc>
+    
+    <lastmod>2025-12-11</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -13,7 +112,16 @@
   <url>
     <loc>https://ssfortynine.github.io/blog/2025/11/21/Obsidian-NAS%E6%9E%81%E7%A9%BA%E9%97%B4-Cpolar%E5%90%8C%E6%AD%A5/</loc>
     
-    <lastmod>2025-11-22</lastmod>
+    <lastmod>2025-12-11</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://ssfortynine.github.io/blog/2025/11/25/Nixos-vnc/</loc>
+    
+    <lastmod>2025-12-11</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -22,7 +130,7 @@
   <url>
     <loc>https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/</loc>
     
-    <lastmod>2025-11-22</lastmod>
+    <lastmod>2025-12-11</lastmod>
     
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -58,36 +166,50 @@
 
   <url>
     <loc>https://ssfortynine.github.io/blog</loc>
-    <lastmod>2025-11-27</lastmod>
+    <lastmod>2025-12-18</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
 
   
   <url>
+    <loc>https://ssfortynine.github.io/blog/tags/Conference/</loc>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://ssfortynine.github.io/blog/tags/FPGA/</loc>
-    <lastmod>2025-11-27</lastmod>
+    <lastmod>2025-12-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://ssfortynine.github.io/blog/tags/Tools/</loc>
-    <lastmod>2025-11-27</lastmod>
+    <lastmod>2025-12-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://ssfortynine.github.io/blog/tags/Obsidian/</loc>
-    <lastmod>2025-11-27</lastmod>
+    <lastmod>2025-12-18</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://ssfortynine.github.io/blog/tags/Rust/</loc>
+    <lastmod>2025-12-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://ssfortynine.github.io/blog/tags/Tool/</loc>
-    <lastmod>2025-11-27</lastmod>
+    <lastmod>2025-12-18</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>

@@ -1,0 +1,95 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> (FPT2025)Poco-为任务并行 HLS 编程扩展多生产者多消费者缓冲区支持的新框架 · ssfortynine's Blog</title><meta name="description" content="(FPT2025)Poco-为任务并行 HLS 编程扩展多生产者多消费者缓冲区支持的新框架 - ssfortynine"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/cat.png"><link rel="stylesheet" href="/css/apollodark.css"><link rel="search" type="application/opensearchdescription+xml" href="https://ssfortynine.github.io/blog/atom.xml" title="ssfortynine's Blog"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="ssfortynine's Blog" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/cat.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">WEIBO</a></li><li class="nav-list-item"><a href="https://github.com/ssfortynine" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">(FPT2025)Poco-为任务并行 HLS 编程扩展多生产者多消费者缓冲区支持的新框架</h1><div class="post-info">Dec 10, 2025</div><div class="post-content"><h2 id="背景与挑战"><a href="#背景与挑战" class="headerlink" title="背景与挑战"></a>背景与挑战</h2><p>PoCo 是一个为任务并行 HLS 编程扩展多生产者多消费者缓冲区支持的新框架</p>
+<p>首先，当的任务并行系统框架，如 TAPA 和 PASTA, 主要采用<strong>单生产者单消费者模型</strong>，进行任务通信。这意味着，所有任务间的交互都必须通过点对点的通道（FIFO 流或 PASTA 缓冲区通道）显示实现。<br><img src="/assets/IMG_0043.jpeg" alt="alt text"></p>
+<p>这种 SPSC 模型带来一个根本限制：<strong>任务之间无法共享一个统一的视图和片上存储器</strong>。如果一个片上内存需要被多个消费者访问，现有 HLS 工具和 TPS 框架都会遇到巨大挑战。</p>
+<p>以 <strong>Shuffle</strong> 内核的例子所示，如图，我们有 4 个生产者任务 T 1 和 2 个消费者任务 T 2. 每个 T 1 写入自己独立的缓冲区，但是每个 T 2 需要读取所有 4 个缓冲区<br><img src="/assets/IMG_0042.jpeg" alt="alt text"></p>
+<h3 id="挑战一：复杂的连接性与访问调度"><a href="#挑战一：复杂的连接性与访问调度" class="headerlink" title="挑战一：复杂的连接性与访问调度"></a>挑战一：复杂的连接性与访问调度</h3><p>在 SPSC 模型下，实现这种访问模式比较难，一个简单的实现会把 buffer 和 T 2 任务包装成一个巨大的单体任务，这会导致组合逻辑路径过长，难以进行跨芯片区域的布局，频率会很低。</p>
+<p>采用 PASTA 实现，需要为每个缓冲区创建<strong>专用的消费者任务</strong>，然后在它们和真正的 T 2 任务之间再引入大量的数据 FIFO 来传递请求和响应。</p>
+<p>如图中所示，这需要 4 个额外的缓冲消费者和 16 个新的 FIFO。这不仅增加了设计的复杂性，其性能还能严重依赖于这些中间任务如何仲裁请求。静态调度会导致带宽利用率低下，而实现动态优先级调度又非常困难，并且会破坏任务独立性的设计哲学</p>
+<h3 id="挑战二：控制协调与资源重用"><a href="#挑战二：控制协调与资源重用" class="headerlink" title="挑战二：控制协调与资源重用"></a>挑战二：控制协调与资源重用</h3><p>在实际应用中，任务的资源使用通常是动态变化的。例如，不同的 T 1 实例可能产生不同数量的键值对。如果我们为每个任务静态分配固定大小的缓冲区，就必须按最大可能需求来分配，这会迅速耗尽宝贵的片上资源。</p>
+<p>理想情况下，我们应该允许 buffer 在 producer 之间<strong>动态共享和重用</strong>。但这就需要在 producer 之间动态管理地址偏移，防止数据被意外覆盖，这对程序设计来说更为复杂。</p>
+<h3 id="挑战三：不平衡管道中的带宽利用不足"><a href="#挑战三：不平衡管道中的带宽利用不足" class="headerlink" title="挑战三：不平衡管道中的带宽利用不足"></a>挑战三：不平衡管道中的带宽利用不足</h3><p>标准的 SPSC buffer 为 producer 和 consumer 各分配一个内存端口。但在<strong>不平衡管道</strong>中（例如 producer 快，consumer 慢），总有一个端口处于闲置状态，导致可用带宽仅利用了 50%<br><img src="/assets/IMG_0044.jpeg" alt="alt text"></p>
+<h3 id="挑战四：布局与物理规划"><a href="#挑战四：布局与物理规划" class="headerlink" title="挑战四：布局与物理规划"></a>挑战四：布局与物理规划</h3><p>在现代多芯片 FPGA 上，将大型单体设计放置于单一区域会导致布线拥塞和频率下降。虽然我们可以尝试手动将一些 buffer 移到其他空闲区域，但这些会引入<strong>延迟敏感的路径</strong>，并且需要重新设计任务的接口和通信逻辑，过程非常繁琐。</p>
+<h2 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h2><p>为了解决这些挑战，该论文提出了 PoCo 框架，其核心是一个共享 MPMC buffer 抽象。让设计者只是在用软件上的共享内存（shared memory），而底层自动处理了所有复杂连线、仲裁和优化</p>
+<h3 id="简化的连接模型"><a href="#简化的连接模型" class="headerlink" title="简化的连接模型"></a>简化的连接模型</h3><p>在 Poco 中，引入一个新的概念：事务器。它可以是 produce、consumer或者两者兼有。每个事务器通过一个或多个定义好的 MPMC 缓冲区端口连接到共享缓冲区。每个端口实际上是一对请求&#x2F;响应 FIFO。如图 6 (a)</p>
+<p>事务器只需要通过这些标准端口发送读写请求，完全无需关心其他事务器的存在。添加新事务器或扩大 buffer 规模，都不会干扰现有任务。<br><img src="/assets/IMG_0046.jpeg" alt="alt text"></p>
+<h3 id="自动协调管理与动态内存分配"><a href="#自动协调管理与动态内存分配" class="headerlink" title="自动协调管理与动态内存分配"></a>自动协调管理与动态内存分配</h3><p>在后端实现了自动的协调机制</p>
+<ul>
+<li><p><strong>内存布局</strong>：buffer 被组织为多个 Block，每个 Block 包含多个 Page。Page 是最小的可锁定（用于读或写）的连续地址空间单元，地址用 index 访问<br><img src="/assets/IMG_0047.jpeg" alt="alt text"></p>
+</li>
+<li><p><strong>互斥访问</strong>：每个 block 由一对访问器管理（一个处理所有写请求，一个处理所有读请求）。我们利用 PASTA 框架为每个页面构建 SPSC 后端，但将页面间的 token 管理封装在父级包装器。通过确保一个页面在同一时刻只能被写入或读取，我们自动防止了数据冒险。</p>
+</li>
+<li><p><strong>动态分配</strong>：我们提供了 <code>allocate</code> 和 <code>free</code> 等 API，允许事务器在运行时动态请求和释放页面。这实质是在静态分配的内存池中动态分配索引。一旦 producer 分配了一个 page 并写入数据，它只需将 page index 共享给 consumer，consumer 就可以立即读取，类似于在软件中共享一个 index</p>
+</li>
+</ul>
+<h3 id="针对不平衡管道的车道交换缓冲区"><a href="#针对不平衡管道的车道交换缓冲区" class="headerlink" title="针对不平衡管道的车道交换缓冲区"></a>针对不平衡管道的车道交换缓冲区</h3><p>为解决带宽利用不足的问题，设计了一个 RTL 模块：Lane-Switching Buffer(LBB)。它包装在双端口内存核外部，可以动态地将两个内存端口同时切换给 producer 或 consumer</p>
+<p>其工作原理是监控 producer 和 consumer 的活动信号。当检测一方（如 producer）即将获得访问 token 时，它会预先将两个内存端口都切换到 producer 所在的“Lane”。这样，当 producer 活跃时，它可以利用完整的双端口带宽进行写入。这使得即使在生产-消费速度不匹配的场景下，也能最大化内存带宽利用率。将这种优化后的内存抽象称为 Lane-Switching Buffer，并将其作为 MPMC buffer 中每个 page 的实现基础</p>
+<p><img src="/assets/IMG_0048.jpeg" alt="alt text"></p>
+<div class="tip">
+
+<ul>
+<li><strong>传统问题:</strong> FPGA 上的 BRAM 通常是双端口的（Port A 和 Port B）。传统的 Ping-Pong Buffer（乒乓缓存）通常固定 Port A 写，Port B 读。如果生产者写得很慢，消费者早就读完了在空等，Port B 就闲置了，这叫“负载不平衡”</li>
+<li><strong>LBB 解决方案:</strong><ul>
+<li>PoCo 设计了一个动态开关（Lane Switch）。    </li>
+<li>它允许生产者或消费者 <strong>动态地</strong> 抢占任意一个空闲端口。  </li>
+<li>如果只在写（没有读），两个端口都可以用来写（双倍写入带宽）。</li>
+<li>如果只在读，两个端口都可以用来读。</li>
+<li><strong>效果:</strong> 在负载不平衡的应用中，这能节省高达 50% 的 BRAM 资源，因为你不需要为了带宽去复制多份内存。</div></li>
+</ul>
+</li>
+</ul>
+<h3 id="布局感知的物理规划"><a href="#布局感知的物理规划" class="headerlink" title="布局感知的物理规划"></a>布局感知的物理规划</h3><p>Poco 框架的架构天然有利于物理规划</p>
+<ul>
+<li>其内部数据路经（如请求路由器、数据请求解析器等）由多个独立相同的单元任务组成，它们之间没有组合逻辑连接，因此可以分散布局在芯片的不同位置</li>
+<li>除了 LBB 与访问器之间的接口，其他所有任务间连接都是延迟不敏感的，可以通过插入流水线寄存器来满足时序要求。</li>
+<li>这使得该论文的工具能够自动识别那些对延迟不敏感的 buffer block，并将它们从拥挤的芯片区域移动到空闲区域。如图 5 所示，移动这些块只会增加固定的访问延迟，而不会影响吞吐量，从而在缓解拥塞的同时获得显著的频率提升。<br>![alt text](&#x2F;assets&#x2F;IMG_0041 1.jpeg)<br><img src="/assets/IMG_0051.jpeg" alt="alt text"></li>
+</ul>
+<div class="tip">
+在高端 FPGA 上，信号跨越芯片边界（Cross-SLR）非常慢。
+
+<ul>
+<li><strong>问题:</strong> 如果把所有内存都放在一个地方，远处的任务访问它就会导致时序违例（Timing Violation），频率降低</li>
+<li><strong>PoCo 的方法:</strong><ul>
+<li>它将共享内存打散成多个 <strong>Block</strong></li>
+<li>这些 Block 是独立的，通过互连网络连接。</li>
+<li>PoCo 的算法会自动计算，把 Block 放置在离使用它的任务最近的物理区域（SLR）。</li>
+<li>它会在跨越长距离的连线上自动插入“流水线寄存器”（Pipeline Registers），虽然增加了一点点延迟（Latency），但极大地提高了运行频率（Frequency）。</div></li>
+</ul>
+</li>
+</ul>
+<h2 id="实现架构与工作流程"><a href="#实现架构与工作流程" class="headerlink" title="实现架构与工作流程"></a>实现架构与工作流程</h2><p>PoCo 顶层架构包含多个自由运行的任务，构成内部数据路经。PoCo 不直接拉一根线去读内存，而是构建了一个类似“微型网络”的系统，整个读写过程变成了“发送请求-&gt;处理-&gt;接收响应”:</p>
+<ol>
+<li><strong>RQR（Request Router）请求路由器</strong>：将请求按类型（控制&#x2F;数据）路由</li>
+<li><strong>CRP (Control Request Parser) &amp; PGM (Page Manager) 控制路经：</strong><ul>
+<li>专门处理 <code>alloc</code> (申请内存页)和 <code>free</code>（释放内存页）</li>
+<li>PGM 是一个硬件模块，维护一个位图（Bitmap）或空闲链表，能在一个时钟周期找到空闲内存页并返回其索引。这实现了动态内存管理</li>
+</ul>
+</li>
+<li><strong>DRP (Data Request Parser)数据路经</strong>：处理具体的 <code>read</code> 和 <code>write</code> 数据请求</li>
+<li><strong>Omega-MIN (Omega Network)</strong> ：一个高效的多级交换网络，负责将请求从任意事务器路由到正确的目标访问器。它负责将 T 个用户任务的请求，路由到 N 个内存块（Blocks）中去。这种网络结构在硬件中非常高效，延迟低且吞吐量大。</li>
+<li><strong>I&#x2F;OHD(Input&#x2F;Output Handler)</strong>：即 block 的访问器，负责执行具体的读写操作，并与 Lane-Switching Buffer Block 交互。锁定具体的内存页 (Mutex)，确保同一时间只有一个任务在写入，防止数据冲突。</li>
+<li>响应再通过 Omega-MIN 网络返回给响应生成器，最终送回事务器</li>
+</ol>
+<p>整个工具流基于 PASTA 构建。用户使用我们提供的 API 编写任务并行程序。前端解析器提取任务和 MPMC buffer 配置，生成相应的任务图和 RTL 模块。所有任务经 Vitis HLS 编译后，由我们粗粒度物理规划器（基于 AutoBridge）进行初始布局。最后，结合资源报告生成的约束，进行最终布局布线，生成比特流。<br>架构图：<br><img src="/assets/IMG_0050.jpeg" alt="alt text"><br>工作流程：<br><img src="/assets/IMG_0053.jpeg" alt="alt text"></p>
+<h2 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h2><p>这篇文章的实验结果是真的很多，做的很完整，从 page 24-31 都在对比不同的架构 (SPSTA, TAPA), 以及不同的设计大小 (standard, Multi-die)</p>
+<h2 id="开源"><a href="#开源" class="headerlink" title="开源"></a>开源</h2><p>*开源仓库: <a target="_blank" rel="noopener" href="https://github.com/SFU-HiAccel/poco">https://github.com/SFU-HiAccel/poco</a></p>
+<h2 id="问答"><a href="#问答" class="headerlink" title="问答"></a>问答</h2><blockquote>
+<p>是否与 TAPA 框架进行比较？在论文的实验结果中看到了对比数据。我的问题是，直观上看，TAPA 也使用高级综合和自动布局技术。那么，相比 TAPA，你的框架主要优势是什么？是什么带来了频率上的大幅提升？</p>
+</blockquote>
+<p>这是一个非常好的问题。TAPA 最大限制在于它不支持 shared buffer 模型。在 TAPA 中，任务间只能通过点对点的 FIFO 流连接。</p>
+<p>这意味着，如果一个进程需要访问多个大型数组，或者多个任务需要访问同一块内存，所有这些数据都必须通过 FIFO 接口进行打包和传输。这迫使整个计算任务连同其所需的所有缓冲区，都必须放置在同一个 FPGA 槽位中。</p>
+<p>这正是 TAPA 在最终实现中所做的，也是其频率表现不佳的主要原因——它试图将大量组合逻辑和 buffer 积压在同一个区域，导致布线拥塞和长路经延迟。它无法利用空闲的芯片区域，因为其架构没有在任务和 shared memory 之间提供带寄存器的、延迟不敏感的接口</p>
+<p>因此，PoCo 和 TAPA 在 buffer 与任务的接口上是根本不同的。TAPA 是直接、紧密的内存连接，而 PoCo 是通过标准化的请求&#x2F;响应与 shared buffer 通信。这种架构分离使我们能够将计算任务和内存块解耦，并利用我们框架的布局优化算法，将 buffer 灵活地分布到不同芯片区域，从而显著提升整体频率</p>
+</div></article></div><aside id="toc" class="post-toc-sidebar"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF%E4%B8%8E%E6%8C%91%E6%88%98"><span class="toc-number">1.</span> <span class="toc-text">背景与挑战</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%91%E6%88%98%E4%B8%80%EF%BC%9A%E5%A4%8D%E6%9D%82%E7%9A%84%E8%BF%9E%E6%8E%A5%E6%80%A7%E4%B8%8E%E8%AE%BF%E9%97%AE%E8%B0%83%E5%BA%A6"><span class="toc-number">1.1.</span> <span class="toc-text">挑战一：复杂的连接性与访问调度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%91%E6%88%98%E4%BA%8C%EF%BC%9A%E6%8E%A7%E5%88%B6%E5%8D%8F%E8%B0%83%E4%B8%8E%E8%B5%84%E6%BA%90%E9%87%8D%E7%94%A8"><span class="toc-number">1.2.</span> <span class="toc-text">挑战二：控制协调与资源重用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%91%E6%88%98%E4%B8%89%EF%BC%9A%E4%B8%8D%E5%B9%B3%E8%A1%A1%E7%AE%A1%E9%81%93%E4%B8%AD%E7%9A%84%E5%B8%A6%E5%AE%BD%E5%88%A9%E7%94%A8%E4%B8%8D%E8%B6%B3"><span class="toc-number">1.3.</span> <span class="toc-text">挑战三：不平衡管道中的带宽利用不足</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%91%E6%88%98%E5%9B%9B%EF%BC%9A%E5%B8%83%E5%B1%80%E4%B8%8E%E7%89%A9%E7%90%86%E8%A7%84%E5%88%92"><span class="toc-number">1.4.</span> <span class="toc-text">挑战四：布局与物理规划</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">2.</span> <span class="toc-text">解决方案</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8C%96%E7%9A%84%E8%BF%9E%E6%8E%A5%E6%A8%A1%E5%9E%8B"><span class="toc-number">2.1.</span> <span class="toc-text">简化的连接模型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8D%8F%E8%B0%83%E7%AE%A1%E7%90%86%E4%B8%8E%E5%8A%A8%E6%80%81%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D"><span class="toc-number">2.2.</span> <span class="toc-text">自动协调管理与动态内存分配</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%92%88%E5%AF%B9%E4%B8%8D%E5%B9%B3%E8%A1%A1%E7%AE%A1%E9%81%93%E7%9A%84%E8%BD%A6%E9%81%93%E4%BA%A4%E6%8D%A2%E7%BC%93%E5%86%B2%E5%8C%BA"><span class="toc-number">2.3.</span> <span class="toc-text">针对不平衡管道的车道交换缓冲区</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%83%E5%B1%80%E6%84%9F%E7%9F%A5%E7%9A%84%E7%89%A9%E7%90%86%E8%A7%84%E5%88%92"><span class="toc-number">2.4.</span> <span class="toc-text">布局感知的物理规划</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E6%9E%B6%E6%9E%84%E4%B8%8E%E5%B7%A5%E4%BD%9C%E6%B5%81%E7%A8%8B"><span class="toc-number">3.</span> <span class="toc-text">实现架构与工作流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="toc-number">4.</span> <span class="toc-text">实验结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BC%80%E6%BA%90"><span class="toc-number">5.</span> <span class="toc-text">开源</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E7%AD%94"><span class="toc-number">6.</span> <span class="toc-text">问答</span></a></li></ol></aside><a href="#" onclick="toggleTOC();return false;" class="toc-toggle"></a></main><footer><div class="paginator"><a href="/2025/12/10/FPT2025-da4ml/" class="prev">PREV</a><a href="/2025/12/10/FPT2025-OpenDRAM/" class="next">NEXT</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'ssfortynine seansun';
+var disqus_identifier = '2025/12/10/FPT2025-Poco/';
+var disqus_title = '(FPT2025)Poco-为任务并行 HLS 编程扩展多生产者多消费者缓冲区支持的新框架';
+var disqus_url = 'https://ssfortynine.github.io/blog/2025/12/10/FPT2025-Poco/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//ssfortynine seansun.disqus.com/count.js" async></script><div class="copyright"><p>© 2025 <a href="https://ssfortynine.github.io/blog">ssfortynine</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/ssfortynine/hexo-theme-apollodark" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> (FPT2025)AMD Turtorial · ssfortynine's Blog</title><meta name="description" content="(FPT2025)AMD Turtorial - ssfortynine"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/cat.png"><link rel="stylesheet" href="/css/apollodark.css"><link rel="search" type="application/opensearchdescription+xml" href="https://ssfortynine.github.io/blog/atom.xml" title="ssfortynine's Blog"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="ssfortynine's Blog" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/cat.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">WEIBO</a></li><li class="nav-list-item"><a href="https://github.com/ssfortynine" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">(FPT2025)AMD Turtorial</h1><div class="post-info">Dec 10, 2025</div><div class="post-content"><h2 id="Vitis-工具链的底层重构与系统设计创新"><a href="#Vitis-工具链的底层重构与系统设计创新" class="headerlink" title="Vitis 工具链的底层重构与系统设计创新"></a>Vitis 工具链的底层重构与系统设计创新</h2><h3 id="Vitis-Unified-IDE-的架构重构"><a href="#Vitis-Unified-IDE-的架构重构" class="headerlink" title="Vitis Unified IDE 的架构重构"></a>Vitis Unified IDE 的架构重构</h3><ul>
+<li>框架迁移：从旧版专有框架迁移到 Eclipse Theia (前端)+ Electron。这意味着 Vitis 现在是一个基于现代 Web 技术的轻量级 IDE, 与 VS Code 的体验类似</li>
+<li>数据驱动：所有的组件原数据从二进制 JSON&#x2F;YAML 格式，极大地友好了版本控制（git）</li>
+<li>现代化 CLI：命令行接口全面采取 python 语言，便于脚本化和自动化</li>
+</ul>
+<h3 id="硬件描述的新标准——System-device-Tree-SDT"><a href="#硬件描述的新标准——System-device-Tree-SDT" class="headerlink" title="硬件描述的新标准——System device Tree (SDT)"></a>硬件描述的新标准——System device Tree (SDT)</h3><ul>
+<li>创新点：废弃了使用了十几年的 <code>.xsa</code> (Xilinx Shell Archive)硬件描述文件</li>
+<li>贡献：引入了 SDT（<code>.dts/dtsi</code>）。这是嵌入式 Linux 的标准，现在被 AMD 用来描述整个 FPGA&#x2F;SoC 硬件（包括内存映射、处理器集群）</li>
+<li>工具链支持：引入“Lopper”工具，专门用于读取 SDT 并自动生成驱动配置和 BSP，实现了真正的“系统感知（System Aware)”</li>
+</ul>
+<h3 id="异构系统设计的关键突破：分段配置（Segmented-Cofiguration）"><a href="#异构系统设计的关键突破：分段配置（Segmented-Cofiguration）" class="headerlink" title="异构系统设计的关键突破：分段配置（Segmented Cofiguration）"></a>异构系统设计的关键突破：分段配置（Segmented Cofiguration）</h3><p>以前在 Versal 等平台上，如果想修改 AI 引擎（AIE）或 PL(可编程逻辑)部分，往往需要重新打包整个系统镜像并重启 Linux</p>
+<ul>
+<li>创新： 实现了 PS 与 PL&#x2F;AIE 的解耦<ul>
+<li>Flat Flow vs. Segmented Configuration: 传统的 Flat Flow 是一次性加载所有内容。新的分段配置允许 PS 和 DDR NoC 先启动（运行 Linux），然后将 PL 和 AI 引擎的数据作为“独立荷载”加载</li>
+<li>技术实现：Host App 可以直接读取 <code>xclbin</code> 中元数据，并通过 <code>fpga_util</code> 等工具在 Linux 运行时动态加载 <code>pl.pdi</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="Vitis-HLS-等“性能驱动”开发方法论"><a href="#Vitis-HLS-等“性能驱动”开发方法论" class="headerlink" title="Vitis HLS 等“性能驱动”开发方法论"></a>Vitis HLS 等“性能驱动”开发方法论</h2><h3 id="Performance-Pragma-性能编译指令）"><a href="#Performance-Pragma-性能编译指令）" class="headerlink" title="Performance Pragma (性能编译指令）"></a>Performance Pragma (性能编译指令）</h3><ul>
+<li>开发者需要手动组合 PIPELINE，UNROLL. ARRAY_PARTITION (数组分区)等数十种 Pragma。这需要深厚的硬件知识、一旦更换芯片，所有的 Pragma 可能都需要重写</li>
+<li>引入 <code>pragma HLS performance target_ti=…</code> (Target Transcation Interval)<ul>
+<li>自动化推导：用户只需要告诉编译器：“我想在 300 MHz”下每秒处理 140 帧图像（即 TI&#x3D;2142857 周期）。编译器会自动计算并插入底层的 pipeline&#x2F;unroll 指令来满足这个目标</li>
+<li>反向注解：工具自动生成的优化指令可以被导出，反写回用户的源码或配置文件中，供专家级用户进行二次微调</li>
+</ul>
+</li>
+</ul>
+<h3 id="自动化的循环分析"><a href="#自动化的循环分析" class="headerlink" title="自动化的循环分析"></a>自动化的循环分析</h3><ul>
+<li>创新点：C-sim Profilling with Loop Trip Counts</li>
+<li>细节：以前处理动态循环，用户必须手动告诉工具循环次数。现在，Vitis 可以在 C 仿真阶段自动捕获循环的运行次数，并将其作为性能估算的依据，无需人工干预</li>
+</ul>
+<h3 id="性能成果"><a href="#性能成果" class="headerlink" title="性能成果"></a>性能成果</h3><p>53 个设计可以成功达到 500MHZ</p>
+<h2 id="LLM-辅助-EDA-设计"><a href="#LLM-辅助-EDA-设计" class="headerlink" title="LLM 辅助 EDA 设计"></a>LLM 辅助 EDA 设计</h2><p>直接问 LLM 写 HLS 代码行不通，必须采用“元提示”(Meta Prompting)策略，并发布了基于 AI 的新工具链</p>
+<h3 id="LLM-在-HLS-中的局限与突破"><a href="#LLM-在-HLS-中的局限与突破" class="headerlink" title="LLM 在 HLS 中的局限与突破"></a>LLM 在 HLS 中的局限与突破</h3><ul>
+<li><strong>实验背景：</strong> 基于中国 FPGA 竞赛（HLS 赛道），154 份有效提交，学生使用 GPT-4&#x2F;DeepSeek 优化 SHA256, LZ4, Cholesky 等算法。</li>
+<li><strong>关键发现：</strong><ul>
+<li><strong>Zero-Shot (直接提问) 失败率高：</strong> LLM 对 HLS 这种“类 C 但非 C”的语法理解很差，经常生成不仅无法综合，甚至破坏数据依赖（Data Dependency）的代码。</li>
+<li><strong>创新——Meta Prompting (元提示)</strong>：仅仅把 LLM 当编码器是不够的，必须把它当作“架构师”<ul>
+<li>Task-Level Prompt: 强制 LLM 采用 Load-Compute-Store（LCS）架构模式，将顺序代码重构为数据流（Dataflow）形式<ul>
+<li>Data-Level Prompt: 注入知识库，在 Prompt 中包含 Vitis HLS 官方文档的精简版（例如：解释 <code>cyclic</code> 分区和 <code>clock</code> 分区的区别）让 LLM 基于规则写代码</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>成果：</strong> 采用 Meta Prompting 的学生，其设计性能比基线提升了 <strong>6.5 倍</strong>。</li>
+</ul>
+</li>
+</ul>
+<h3 id="Vitis-IDE-的-AI-路线图-CRAI"><a href="#Vitis-IDE-的-AI-路线图-CRAI" class="headerlink" title="Vitis IDE 的 AI 路线图 (CRAI)"></a><strong>Vitis IDE 的 AI 路线图 (CRAI)</strong></h3><ul>
+<li><strong>2025.2 (Early Access)：</strong> <strong>BYOK (Bring Your Own Key)</strong> 模式。允许用户在 Vitis IDE 内直接挂载自己的 OpenAI&#x2F;Local LLM API key，实现代码解释和辅助。</li>
+<li><strong>2026.1 (Future)：</strong><ul>
+<li><strong>AI Performance Budgeter：</strong> AI 自动分析性能瓶颈并分配时序预算。</li>
+<li><strong>RAG Chatbot：</strong> 基于 AMD 官方文档训练的专用问答机器人（解决通用大模型幻觉问题）。</li>
+</ul>
+</li>
+</ul>
+<h2 id="端侧-AI-Edge-AI-与具身智能-Robotics"><a href="#端侧-AI-Edge-AI-与具身智能-Robotics" class="headerlink" title="端侧 AI (Edge AI) 与具身智能 (Robotics)"></a>端侧 AI (Edge AI) 与具身智能 (Robotics)</h2><p><strong>创新主旨：</strong> 利用 AMD 独有的“大统一内存”架构，打通从云端训练到边缘部署的完整链路，解决机器人领域的 Sim2Real 难题。</p>
+<h3 id="1-硬件创新：Ryzen-AI-Max-Strix-Halo-的架构优势"><a href="#1-硬件创新：Ryzen-AI-Max-Strix-Halo-的架构优势" class="headerlink" title="1.硬件创新：Ryzen AI Max (Strix Halo) 的架构优势"></a>1.硬件创新：Ryzen AI Max (Strix Halo) 的架构优势</h3><ul>
+<li><strong>核心参数：</strong> 40 CU GPU + 50 TOPS NPU。</li>
+<li><strong>杀手级特性：128GB 统一内存 (Unified Memory)</strong>。<ul>
+<li><strong>对比竞品：</strong> 传统的 CPU+独立显卡架构，数据需要在内存和显存之间通过 PCIe 搬运，不仅慢而且受限于显存大小（通常仅 16GB-24GB）。</li>
+<li><strong>贡献：</strong> Ryzen AI 允许 CPU、GPU 和 NPU 共享这 128GB 内存。这意味着可以在<strong>笔记本&#x2F;Mini PC 这种边缘设备上，直接加载运行 70B（700亿参数）级别的超大模型</strong>，无需量化或剪枝。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-具身智能全栈工作流-The-Embodied-AI-Pipeline"><a href="#2-具身智能全栈工作流-The-Embodied-AI-Pipeline" class="headerlink" title="2.具身智能全栈工作流 (The Embodied AI Pipeline)"></a>2.具身智能全栈工作流 (The Embodied AI Pipeline)</h3><p>AMD 展示了一套完整的机器人开发闭环：</p>
+<ul>
+<li><strong>Step 1 云端训练：</strong> 使用 Instinct MI300 集群训练 <strong>OpenVLA</strong> (Vision-Language-Action) 模型。</li>
+<li><strong>Step 2 物理仿真：</strong> 使用开源仿真器 <strong>Genesis</strong>。<ul>
+<li><strong>创新：</strong> 该仿真器支持 AMD GPU 加速，可以在虚拟环境中并行训练数千个机器人代理（Agent），例如训练机器狗走过崎岖地形。</li>
+</ul>
+</li>
+<li><strong>Step 3 Sim2Real (仿真到现实)：</strong><ul>
+<li><strong>难点：</strong> 仿真图像与真实世界有色差和纹理差异（Domain Gap）。</li>
+<li><strong>解决方案：</strong> 使用 Ryzen AI 收集少量真实数据，进行<strong>域适应 (Domain Adaptation)</strong> 微调。</li>
+</ul>
+</li>
+<li><strong>Step 4 边缘部署：</strong> 将微调后的 VLA 模型部署在搭载 Ryzen AI 的机械臂控制柜中，实现对动态物体的抓取和操作。</li>
+</ul>
+<h3 id="3-学术生态支持-Ryzers-AIPC-Cluster"><a href="#3-学术生态支持-Ryzers-AIPC-Cluster" class="headerlink" title="3. 学术生态支持 (Ryzers &amp; AIPC Cluster)"></a>3. 学术生态支持 (Ryzers &amp; AIPC Cluster)</h3><ul>
+<li><strong>AIPC Cluster：</strong> 演示了一种低成本方案，用 20+ 个 Mini PC 组成集群，功耗低、噪音小，但总显存极大，适合实验室环境。</li>
+<li><strong>Ryzers：</strong> 这是一个开源项目，提供了预配置好的 Docker 容器，包含 ROS2、PyTorch、Triton 等全套环境，解决环境配置难的问题</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>*PPT 及其图示来自 FPT 2025 AMD Turtorial</p>
+</div></article></div><aside id="toc" class="post-toc-sidebar"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Vitis-%E5%B7%A5%E5%85%B7%E9%93%BE%E7%9A%84%E5%BA%95%E5%B1%82%E9%87%8D%E6%9E%84%E4%B8%8E%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E5%88%9B%E6%96%B0"><span class="toc-number">1.</span> <span class="toc-text">Vitis 工具链的底层重构与系统设计创新</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Vitis-Unified-IDE-%E7%9A%84%E6%9E%B6%E6%9E%84%E9%87%8D%E6%9E%84"><span class="toc-number">1.1.</span> <span class="toc-text">Vitis Unified IDE 的架构重构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6%E6%8F%8F%E8%BF%B0%E7%9A%84%E6%96%B0%E6%A0%87%E5%87%86%E2%80%94%E2%80%94System-device-Tree-SDT"><span class="toc-number">1.2.</span> <span class="toc-text">硬件描述的新标准——System device Tree (SDT)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%82%E6%9E%84%E7%B3%BB%E7%BB%9F%E8%AE%BE%E8%AE%A1%E7%9A%84%E5%85%B3%E9%94%AE%E7%AA%81%E7%A0%B4%EF%BC%9A%E5%88%86%E6%AE%B5%E9%85%8D%E7%BD%AE%EF%BC%88Segmented-Cofiguration%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">异构系统设计的关键突破：分段配置（Segmented Cofiguration）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vitis-HLS-%E7%AD%89%E2%80%9C%E6%80%A7%E8%83%BD%E9%A9%B1%E5%8A%A8%E2%80%9D%E5%BC%80%E5%8F%91%E6%96%B9%E6%B3%95%E8%AE%BA"><span class="toc-number">2.</span> <span class="toc-text">Vitis HLS 等“性能驱动”开发方法论</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Performance-Pragma-%E6%80%A7%E8%83%BD%E7%BC%96%E8%AF%91%E6%8C%87%E4%BB%A4%EF%BC%89"><span class="toc-number">2.1.</span> <span class="toc-text">Performance Pragma (性能编译指令）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E5%8C%96%E7%9A%84%E5%BE%AA%E7%8E%AF%E5%88%86%E6%9E%90"><span class="toc-number">2.2.</span> <span class="toc-text">自动化的循环分析</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%88%90%E6%9E%9C"><span class="toc-number">2.3.</span> <span class="toc-text">性能成果</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#LLM-%E8%BE%85%E5%8A%A9-EDA-%E8%AE%BE%E8%AE%A1"><span class="toc-number">3.</span> <span class="toc-text">LLM 辅助 EDA 设计</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#LLM-%E5%9C%A8-HLS-%E4%B8%AD%E7%9A%84%E5%B1%80%E9%99%90%E4%B8%8E%E7%AA%81%E7%A0%B4"><span class="toc-number">3.1.</span> <span class="toc-text">LLM 在 HLS 中的局限与突破</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vitis-IDE-%E7%9A%84-AI-%E8%B7%AF%E7%BA%BF%E5%9B%BE-CRAI"><span class="toc-number">3.2.</span> <span class="toc-text">Vitis IDE 的 AI 路线图 (CRAI)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AB%AF%E4%BE%A7-AI-Edge-AI-%E4%B8%8E%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD-Robotics"><span class="toc-number">4.</span> <span class="toc-text">端侧 AI (Edge AI) 与具身智能 (Robotics)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E7%A1%AC%E4%BB%B6%E5%88%9B%E6%96%B0%EF%BC%9ARyzen-AI-Max-Strix-Halo-%E7%9A%84%E6%9E%B6%E6%9E%84%E4%BC%98%E5%8A%BF"><span class="toc-number">4.1.</span> <span class="toc-text">1.硬件创新：Ryzen AI Max (Strix Halo) 的架构优势</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%85%B7%E8%BA%AB%E6%99%BA%E8%83%BD%E5%85%A8%E6%A0%88%E5%B7%A5%E4%BD%9C%E6%B5%81-The-Embodied-AI-Pipeline"><span class="toc-number">4.2.</span> <span class="toc-text">2.具身智能全栈工作流 (The Embodied AI Pipeline)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%AD%A6%E6%9C%AF%E7%94%9F%E6%80%81%E6%94%AF%E6%8C%81-Ryzers-AIPC-Cluster"><span class="toc-number">4.3.</span> <span class="toc-text">3. 学术生态支持 (Ryzers &amp; AIPC Cluster)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">5.</span> <span class="toc-text">参考资料</span></a></li></ol></aside><a href="#" onclick="toggleTOC();return false;" class="toc-toggle"></a></main><footer><div class="paginator"><a href="/2025/12/10/FPT2025-Fusion-SoC-Workshop/" class="prev">PREV</a><a href="/2025/12/10/FPT2025-Shouyi_Yin/" class="next">NEXT</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'ssfortynine seansun';
+var disqus_identifier = '2025/12/10/FPT2025-AMD-Turtorial/';
+var disqus_title = '(FPT2025)AMD Turtorial';
+var disqus_url = 'https://ssfortynine.github.io/blog/2025/12/10/FPT2025-AMD-Turtorial/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//ssfortynine seansun.disqus.com/count.js" async></script><div class="copyright"><p>© 2025 <a href="https://ssfortynine.github.io/blog">ssfortynine</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/ssfortynine/hexo-theme-apollodark" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

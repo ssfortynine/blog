@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> (FPT2025)da4ml:针对 FPGA 上超低延迟神经网络的快速、可扩展且精确的 CMVM 优化框架 · ssfortynine's Blog</title><meta name="description" content="(FPT2025)da4ml:针对 FPGA 上超低延迟神经网络的快速、可扩展且精确的 CMVM 优化框架 - ssfortynine"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/cat.png"><link rel="stylesheet" href="/css/apollodark.css"><link rel="search" type="application/opensearchdescription+xml" href="https://ssfortynine.github.io/blog/atom.xml" title="ssfortynine's Blog"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="ssfortynine's Blog" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/cat.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">WEIBO</a></li><li class="nav-list-item"><a href="https://github.com/ssfortynine" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">(FPT2025)da4ml:针对 FPGA 上超低延迟神经网络的快速、可扩展且精确的 CMVM 优化框架</h1><div class="post-info">Dec 10, 2025</div><div class="post-content"><p>Da4ml 一个针对 FPGA 上超低延迟神经网络的快速、可扩展且精确的 CMVM 优化框架。</p>
+<ul>
+<li>基于图的分解和成本感知的 CSE</li>
+<li>da4ml 框架实现为一个开源库，集成到 hls4ml 工具中，da4ml 也可以直接生成可综合的 RTL，以启用 CMS 进行 AXOL1TL 异常检测出发的生产部署</li>
+</ul>
+<h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><h3 id="常数矩阵算法"><a href="#常数矩阵算法" class="headerlink" title="常数矩阵算法"></a>常数矩阵算法</h3><p>分布式算术是一种无乘法器方法，通过用移位加（或减）操作替代乘积累加操作在硬件中实现乘法，这些操作通常映射到 FPGA 上的 LUT。</p>
+<p>在无精度损失的情况下使用加法器树实现 CMVM 操作的最先进算法仍是提出的 H_cmvm 算法</p>
+<ul>
+<li>该算法寻找将 CMVM 问题转换为潜在更简单子问题的可能变换，并使用类似于启发式的方法来评估每个变换的成本</li>
+<li>该算法还支持通过限制搜索相空间来制定生成加法器树的最大允许加法器深度<br>计算成本高昂</li>
+</ul>
+<h3 id="超低延迟神经网络"><a href="#超低延迟神经网络" class="headerlink" title="超低延迟神经网络"></a>超低延迟神经网络</h3><p>设计中资源消耗最多的部分通常是全连接层或卷积层中的矩阵向量乘法。</p>
+<h2 id="Da4ml-算法"><a href="#Da4ml-算法" class="headerlink" title="Da4ml 算法"></a>Da4ml 算法</h2><h3 id="Hls4ml"><a href="#Hls4ml" class="headerlink" title="Hls4ml"></a>Hls4ml</h3><p>Hls4ml 为用户提供了一个高层接口，用于连接流行的机器学习框架和 how 后端，是用户能够以最小努力在 FPGA 上部署神经网络</p>
+<h3 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h3><p>Da4ml 是一种基于 CSE 的混合算法。与其他基于 CSE 的算法类似，该算法在常数矩阵的离散表示上运行。</p>
+<p>在这项工作中，我们采用规范带符号数字表示，CSD 是一种数字的带符号数字表示，永远没有两个连续的非零数字，并且非零数字的数量保证是最少的。因此，对于一个有 x 位数字的数，CSD 表示最多有 [x&#x2F;2+1] 个非零数字，平均占总数字数的 1&#x2F;3</p>
+<ul>
+<li>首先，用于 M 仅包含定点整数，通过跨行和列应用位移位来对其进行归一化，使得除了零之外没有行&#x2F;列的所有项都是偶数。记录得到的缩放因子，并将应用于输入&#x2F;输出向量</li>
+<li>基于一种图的方式将常数矩阵 M 分解为两个子矩阵 M1, M2，该方法捕获了跨行的高级公共模式。然后，它对两个子矩阵应用 CSE 以最小化冗余计算，最终优化的加法器树显著减少了 LUT 使用并改善了延迟。</li>
+</ul>
+<h3 id="理解与实现"><a href="#理解与实现" class="headerlink" title="理解与实现"></a>理解与实现</h3><p>对于 FPGA 这样的硬件来说，<strong>乘法器</strong>（Multiplier）很贵（占资源多），但<strong>移位</strong>（Shift）几乎是免费的（只是连线变一下），<strong>加法</strong>（Add）则介于两者之间。</p>
+<p>因此，da4ml 的目标就是：<strong>把所有的乘法都变成“移位 + 加法”，然后想办法把重复的加法合并掉。</strong></p>
+<hr>
+<h3 id="第一步：理解“移位代替乘法”与-CSD-表示法"><a href="#第一步：理解“移位代替乘法”与-CSD-表示法" class="headerlink" title="第一步：理解“移位代替乘法”与 CSD 表示法"></a>第一步：理解“移位代替乘法”与 CSD 表示法</h3><p>在二进制里，乘以 2 的幂次方就是移位。比如 $$x \times 8$$ 就是把x 向左移 3 位。但是，乘以 7 怎么办？</p>
+<ul>
+<li><strong>普通二进制方法：</strong>$$7&#x3D;4+2+1$$ (二进制 111)。  这里需要 <strong>2 次加法</strong>。</li>
+<li><strong>CSD (Canonical Signed Digit) 方法（论文重点）：</strong>$$7&#x3D;8-1$$ 这里只需要 <strong>1 次减法</strong>（加法和减法在硬件上代价一样）。</li>
+</ul>
+<p><strong>CSD 的核心原则：</strong> 允许使用负数（-1），尽量减少非零位的数量，绝不让两个非零位相邻。</p>
+<h3 id="第二步：将矩阵乘法拆碎（第一阶段的简化理解）"><a href="#第二步：将矩阵乘法拆碎（第一阶段的简化理解）" class="headerlink" title="第二步：将矩阵乘法拆碎（第一阶段的简化理解）"></a>第二步：将矩阵乘法拆碎（第一阶段的简化理解）</h3><p>假设我们有以下矩阵乘法 <br>$$<br>y_0&#x3D;3x_0+3x_1<br>$$<br>$$<br>y_1&#x3D;5x_0+7x_1<br>$$<br>我们先把常数 3, 5, 7 转换成 CSD：</p>
+<ul>
+<li>$$3 \rightarrow 4-1 \rightarrow (1 \ll 2)-(1\ll 0)$$</li>
+<li>$$5 \rightarrow 4+1 \rightarrow (1 \ll 2)+(1\ll 0)$$</li>
+<li>$$7 \rightarrow 8-1 \rightarrow (1 \ll 3)-(1\ll 0)$$<br>现在把 y 的计算全部展开成最基础的项（Term）：</li>
+</ul>
+<ul>
+<li><strong>对于</strong> y_0:<ul>
+<li>$$x_0 部分：0 \ll 2, -x_0 \ll 0$$</li>
+<li>$$x_1 部分：x_1 \ll 2, -x_1 \ll 0$$</li>
+</ul>
+</li>
+<li><strong>对于</strong> y_1<ul>
+<li>$$x_0 部分：0 \ll 2, x_0 \ll 0$$</li>
+<li>$$x_1 部分：0 \ll 3, -x_1 \ll 0$$</li>
+</ul>
+</li>
+</ul>
+<p>在这一步之前，它先看整列。比如，x_0  这一列在 y_0 是3，在 y_1 是5。如果很多列都是“3”和“5”的组合，它就把 (3, 5) 打包成一个图的节点。<br>该内容不包括 prim 算法</p>
+<hr>
+<h3 id="第三步：公共子表达式消除-CSE-——-核心中的核心"><a href="#第三步：公共子表达式消除-CSE-——-核心中的核心" class="headerlink" title="第三步：公共子表达式消除 (CSE) —— 核心中的核心"></a>第三步：公共子表达式消除 (CSE) —— 核心中的核心</h3><p>这是 da4ml 能够省资源的关键。找出重复出现的加法组合。</p>
+<ol>
+<li>$$y_0 需要：x 0 \ll2, -x 0\ll0, x 1\ll2, -x 1\ll0$$</li>
+<li>$$y_1 需要：x0\ll2, x0\ll0, x1\ll3, -x1\ll0$$</li>
+</ol>
+<p>x_0 &lt;&lt; 2在 y_0 和 y_1 中都出现了。但这只是单项复用。更高级的是<strong>两项组合复用</strong>。</p>
+<p>假设发现 $$A&#x3D;x_0 \ll 2$$ 和$$B&#x3D;-x_1 \ll 0$$在计算中经常一起出现（需要相加）。<br>如果不优化：</p>
+<ul>
+<li>$$y_0&#x3D;…+A+B+…（做一次加法）$$</li>
+<li>$$y_1&#x3D;…+A+B+…（又做一次加法）$$<br>优化后 (CSE)：</li>
+</ul>
+<ul>
+<li>$$T_1&#x3D;A+B（做一次加法）$$</li>
+</ul>
+<ul>
+<li>$$Y_0&#x3D;…+T_1+…$$</li>
+<li>$$Y_1&#x3D;…+T_1+…$$<br>这样就节省了一次加法运算。</li>
+</ul>
+<h4 id="da4ml-的-CSE-算法逻辑"><a href="#da4ml-的-CSE-算法逻辑" class="headerlink" title="da4ml 的 CSE 算法逻辑"></a>da4ml 的 CSE 算法逻辑</h4><ol>
+<li><strong>统计频率：</strong> 遍历所有还未计算的式子，找出所有可能的“两项相加”组合 </li>
+<li><strong>计算代价：</strong> 论文提出了一个代价函数。不仅仅看频率，还要看位宽。<ul>
+<li>简单理解：两个数位宽越接近、重叠越多，把它们加起来就越“贵”（消耗 LUT 多）。</li>
+<li><strong>策略：</strong> 我们优先消除那些出现<strong>频率高</strong>且<strong>重叠多</strong>（消除后省得多）的组合。</li>
+</ul>
+</li>
+<li><strong>替换：</strong> 选定最优组合（例如 $$T_{new}&#x3D;x_a \ll s_1 + x_b \ll s_2$$），把它变成一个新的“基础项”，放入池子。</li>
+<li><strong>循环：</strong> 重复上述步骤，直到没有可以合并的项j</li>
+</ol>
+<hr>
+<h3 id="第四步：da4ml-相比传统算法的改进点"><a href="#第四步：da4ml-相比传统算法的改进点" class="headerlink" title="第四步：da4ml 相比传统算法的改进点"></a>第四步：da4ml 相比传统算法的改进点</h3><ol>
+<li><strong>不只看频率，看“对齐”：</strong><br> 在选择合并哪两个项时，da4ml 倾向于选择<strong>移位量相近</strong>的项。<ul>
+<li>A&lt;&lt;10 和 B&lt;&lt;0 相加：这两个数在二进制上几乎不重叠，加法器很简单，甚至不需要进位链，只是简单的拼接。消除它的收益很低。</li>
+<li>A&lt;&lt;2 和 B&lt;&lt;2 相加：完全重叠，每一位都要算进位，这是<strong>最贵</strong>的。</li>
+</ul>
+<ul>
+<li><strong>da4ml 策略：</strong> 优先消除那些“贵”的加法（重叠多的）。</li>
+</ul>
+</li>
+<li><strong>两阶段优化：</strong><br> 在第一阶段，它把常数矩阵 M 分解成了 $$M&#x3D;M_1 \times M_2$$<ul>
+<li>M_1: 基础构件块。</li>
+<li>M_2: 稀疏的组合系数。<br>这相当于先在宏观上找了一次规律（比如很多列都是由“基础列 A”和“基础列 B”加减得来的），然后再在微观上做 CSE。这大大加快了处理大规模矩阵的速度。</li>
+</ul>
+</li>
+</ol>
+</div></article></div><aside id="toc" class="post-toc-sidebar"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF"><span class="toc-number">1.</span> <span class="toc-text">背景</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E6%95%B0%E7%9F%A9%E9%98%B5%E7%AE%97%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">常数矩阵算法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B6%85%E4%BD%8E%E5%BB%B6%E8%BF%9F%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="toc-number">1.2.</span> <span class="toc-text">超低延迟神经网络</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Da4ml-%E7%AE%97%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">Da4ml 算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Hls4ml"><span class="toc-number">2.1.</span> <span class="toc-text">Hls4ml</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E8%BF%B0"><span class="toc-number">2.2.</span> <span class="toc-text">概述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%90%86%E8%A7%A3%E4%B8%8E%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.3.</span> <span class="toc-text">理解与实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%80%E6%AD%A5%EF%BC%9A%E7%90%86%E8%A7%A3%E2%80%9C%E7%A7%BB%E4%BD%8D%E4%BB%A3%E6%9B%BF%E4%B9%98%E6%B3%95%E2%80%9D%E4%B8%8E-CSD-%E8%A1%A8%E7%A4%BA%E6%B3%95"><span class="toc-number">2.4.</span> <span class="toc-text">第一步：理解“移位代替乘法”与 CSD 表示法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%BA%8C%E6%AD%A5%EF%BC%9A%E5%B0%86%E7%9F%A9%E9%98%B5%E4%B9%98%E6%B3%95%E6%8B%86%E7%A2%8E%EF%BC%88%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5%E7%9A%84%E7%AE%80%E5%8C%96%E7%90%86%E8%A7%A3%EF%BC%89"><span class="toc-number">2.5.</span> <span class="toc-text">第二步：将矩阵乘法拆碎（第一阶段的简化理解）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E6%AD%A5%EF%BC%9A%E5%85%AC%E5%85%B1%E5%AD%90%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%B6%88%E9%99%A4-CSE-%E2%80%94%E2%80%94-%E6%A0%B8%E5%BF%83%E4%B8%AD%E7%9A%84%E6%A0%B8%E5%BF%83"><span class="toc-number">2.6.</span> <span class="toc-text">第三步：公共子表达式消除 (CSE) —— 核心中的核心</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#da4ml-%E7%9A%84-CSE-%E7%AE%97%E6%B3%95%E9%80%BB%E8%BE%91"><span class="toc-number">2.6.1.</span> <span class="toc-text">da4ml 的 CSE 算法逻辑</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E6%AD%A5%EF%BC%9Ada4ml-%E7%9B%B8%E6%AF%94%E4%BC%A0%E7%BB%9F%E7%AE%97%E6%B3%95%E7%9A%84%E6%94%B9%E8%BF%9B%E7%82%B9"><span class="toc-number">2.7.</span> <span class="toc-text">第四步：da4ml 相比传统算法的改进点</span></a></li></ol></li></ol></aside><a href="#" onclick="toggleTOC();return false;" class="toc-toggle"></a></main><footer><div class="paginator"><a href="/2025/12/10/FPT2025-Toward-Domain/" class="prev">PREV</a><a href="/2025/12/10/FPT2025-Poco/" class="next">NEXT</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'ssfortynine seansun';
+var disqus_identifier = '2025/12/10/FPT2025-da4ml/';
+var disqus_title = '(FPT2025)da4ml:针对 FPGA 上超低延迟神经网络的快速、可扩展且精确的 CMVM 优化框架';
+var disqus_url = 'https://ssfortynine.github.io/blog/2025/12/10/FPT2025-da4ml/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//ssfortynine seansun.disqus.com/count.js" async></script><div class="copyright"><p>© 2025 <a href="https://ssfortynine.github.io/blog">ssfortynine</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/ssfortynine/hexo-theme-apollodark" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

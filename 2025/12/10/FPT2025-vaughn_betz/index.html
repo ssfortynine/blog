@@ -1,0 +1,137 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> (FPT2025)超摩尔与深度学习时代的的空间架构——Vaughn Betz 教授(多伦多大学& Cerebras Systems) · ssfortynine's Blog</title><meta name="description" content="(FPT2025)超摩尔与深度学习时代的的空间架构——Vaughn Betz 教授(多伦多大学&amp; Cerebras Systems) - ssfortynine"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/cat.png"><link rel="stylesheet" href="/css/apollodark.css"><link rel="search" type="application/opensearchdescription+xml" href="https://ssfortynine.github.io/blog/atom.xml" title="ssfortynine's Blog"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="ssfortynine's Blog" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/cat.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">WEIBO</a></li><li class="nav-list-item"><a href="https://github.com/ssfortynine" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">(FPT2025)超摩尔与深度学习时代的的空间架构——Vaughn Betz 教授(多伦多大学& Cerebras Systems)</h1><div class="post-info">Dec 10, 2025</div><div class="post-content"><h2 id="背景介绍"><a href="#背景介绍" class="headerlink" title="背景介绍"></a>背景介绍</h2><p>以电动汽车 Chevy Bolt (6 kw) 与 Nvidia Drive AGX Pegasus (750 W) 为例，说明在自动驾驶等安全关键场景中，低推理延迟至关重要。</p>
+<ul>
+<li>评价指标“性能&#x2F;功耗&#x2F;成本”，其中功耗约占总成本的 30%</li>
+</ul>
+<p>FPGA 具有的可定制化与操作数精简的特点，通过重构实现网络所需的精确硬件，无需指令流，直接进行必要计算。其可编程路由与逻辑允许数据直连，并支持最小位宽操作，从而大幅降低能耗。</p>
+<h3 id="空间计算在数据局部性方面的优势"><a href="#空间计算在数据局部性方面的优势" class="headerlink" title="空间计算在数据局部性方面的优势"></a>空间计算在数据局部性方面的优势</h3><p>下图展示从片外 HBM2 到 SRAM (416kB、60kB、16kB 锁存阵列)数据流动，体现了不同存储层级的带宽与能耗差异。<br><img src="/assets/a06bc1934279351c450ef82dd070a057.jpg" alt="alt text"></p>
+<p><strong>FPGA 在空间计算的优势：</strong></p>
+<ul>
+<li>可通过可编程逻辑与路由灵活存储，将数据贴近计算单元，显著减少数据搬运能耗。但是随着网络规模增大，依赖片外存储会削弱这一优势。</li>
+<li>具备极高片上带宽 (~Pb&#x2F;s，可划分为上万个独立存储块，支持按需定制存储大小与位置，并能与逻辑结合实现稀疏计算等优化。但超大规模网络仍需片外存储。</li>
+<li>支持可编程串行 I&#x2F;O（如 PCIe）、存储接口 （如 DDR）以及嵌入式低延迟定制 I&#x2F;O，使其能够集成预处理、特征提取与深度学习推理，形成完整低延迟系统。</li>
+</ul>
+<p>但可编程逻辑单元与路由比专用电路面积更大、速度更慢。因此，提出研究方向：是否可通过硬化关键功能（如 DSP 块）或改进软硬件结构，提升 FPGA 在深度学习中的效率</p>
+<h2 id="设计前端"><a href="#设计前端" class="headerlink" title="设计前端"></a>设计前端</h2><h3 id="HPIPE"><a href="#HPIPE" class="headerlink" title="HPIPE"></a>HPIPE</h3><p>HPIPE 数据流架构，其专为高效 CNN 推理设计，体现了如何通过空间映射提升计算效率。传统时序映射使用通过处理单元逐层处理 (PE)，效率较低,如下图所示。<br><img src="/assets/ca94b4923aef556ac513dc26016d894a.jpeg" alt="alt text"><br>HPIPE 则为每层定制硬件单元，层间通过延迟不敏感接口连接，充分利用流水线并行提升效率与吞吐量<br><img src="/assets/940a6ee3090e3fe82fe13438fc9e2b77.jpeg" alt="alt text"><br>下图可以看出专用硬件与本地数据移动的优势；无指令译码开销、数据局部性高、但需为不同网络设计不同硬件，因此需要领域专用编译器的支持。<br>图来自，M.Hall et al,“From TensorFlow Graphs to LUTs and Wires: Automated Sparse and Physically Aware CNN Hardware Generation”, FPT 2020.<br><img src="/assets/76da1ec3ede79e96ac583dfc2469f439.jpeg" alt="alt text"><br>该图展示了 HPIPE 自动生成 CNN 硬件的流程：从 TensorFlow 模型出发，经过图优化、资源分配、RTL 生成、布局感知流水线与存储映射，最终生成 FPGA bitstream。该方法通过层融合、流水线平衡与本地化通信优化，提升整体效率。<br><img src="/assets/1bd108410e31017fa913422afbe490b5.png" alt="alt text"><br>HPIPE 通过将超大规模 CNN 的权重选择性卸载的策略，将部分权重移至片外 HBM, 释放片上存储，使更大网络能在单 FPGA 上运行。虽然会损失一定性能，但仍优于先前方案，体现了成本与性能的权衡。</p>
+<h3 id="Overlay-NPU"><a href="#Overlay-NPU" class="headerlink" title="Overlay NPU"></a>Overlay NPU</h3><p>传统流程需要应用专家编写 RTL, 设计时间周期长；而 Overlay 方案则由硬件专家定义 ISA 与工具链，应用专家通过软件编程快速部署，实现“软件可编程的推理加速”。<br><img src="/assets/2b5711212aaba907aa605478f68ecaff.jpeg" alt="alt text"></p>
+<p>NPU 主要针对多层感知机 (MLPs)、循环神经网络 (RNNs)、门控循环单元 (GRUs)、长短期记忆网络 (LSTMs)和图神经网络 (GNNs)等神经网络模型</p>
+<p><strong>NPU 架构特点</strong>：</p>
+<ul>
+<li>超长指令字 (VLIW)软处理器：采用 5 个粗粒度阶段的 VLIW 架构，单条指令可执行 45000 次操作</li>
+<li>Amortize control：优化指令执行效率</li>
+<li>定制内存子系统：利用片上内存带宽、提升数据处理速度</li>
+<li>数据级联：数据从一个阶段级联到下一个阶段，实现空间局部性优化</li>
+</ul>
+<p><strong>NPU 的组成结构</strong>:</p>
+<ul>
+<li>包括多个功能单元 (MVU、eVRF、MFU 0、MFU 1) 及其连接方式</li>
+<li>指令解码与分发单元：负责指令的解码和分发，确保各功能单元协同工作</li>
+</ul>
+<p><strong>NPU的开发流程</strong>:</p>
+<ul>
+<li>使用领域特定语言 DSL 编写 NPU 程序</li>
+<li>将 DSL 编写的程序编译为可在 NPU 上运行的代码</li>
+<li>通过性能仿真工具评估 NPU 程序的执行效果</li>
+</ul>
+<p>图片引用了A. Boutros等人在FPT 2020会议上发表的研究《Beyond Peak Performance: Comparing the Real Performance of AI-Optimized FPGAs and GPUs》，该研究比较了AI优化的FPGA和GPU的实际性能。</p>
+<p><img src="/assets/974fae770557e1415973d000aa1d4652.jpeg" alt="alt text"></p>
+<h3 id="支持算术的逻辑结构优化"><a href="#支持算术的逻辑结构优化" class="headerlink" title="支持算术的逻辑结构优化"></a>支持算术的逻辑结构优化</h3><p><img src="/assets/7e124e5f5d22e45200cc471efd4e3b0e.jpeg" alt="alt text"></p>
+<ul>
+<li>通过改进 LUT 与加法器结构，可在面积增加不足 4%的情况下，提升 MAC 密度 25%~50%</li>
+</ul>
+<p><img src="/assets/74203a333b6903d830b995f200592b34.jpeg" alt="alt text"><br>虽然可编程逻辑相比 ASIC 在面积上与速度上存在劣势，但针对常用计算模式（如 FIR 滤波器）硬化 DSP 块，仍能在面积与速度间取得较好平衡，需要综合考虑路由与使用范围。</p>
+<h3 id="Inter-Stratix-10-NX-张量块的设计演变"><a href="#Inter-Stratix-10-NX-张量块的设计演变" class="headerlink" title="Inter Stratix 10 NX 张量块的设计演变"></a>Inter Stratix 10 NX 张量块的设计演变</h3><p>传统 DSP 块支持 2 个 int 18 乘法器，而张量块则集成 30 个 int 8 乘法器，通过组织为 3 个 dot-10 引擎、输入广播与乒乓复用链，在相近面积内实现 15 倍 int 8 算力提升，适用于密集型低精度矩阵计算</p>
+<p><strong>输入输出配置：</strong><br><img src="/assets/55eebdba43af2b2f28c5a54ac1052e1b.png" alt="alt text"></p>
+<ul>
+<li>480 输入&#x2F;480 输出：初始配置下，Tensor Block int 8 支持 480 输入和 480 个输出<br><img src="/assets/cffee54af1a0c37ad1dc8123a419e50d.png" alt="alt text"></li>
+<li>480 输入&#x2F;72 输出：通过限制输出，将乘法器排列为 3 个 dot-10 引擎累加器，实现 480 输入和 72 输出<br><img src="/assets/0600dc5d2113650d97ecc470a3ae6256.png" alt="alt text"></li>
+<li>320 输入&#x2F;72 输出：进一步限制输入，通过广播一组到所有 dot-10 引擎，实现 320 个输入和 72 输出<br><img src="/assets/79149dc5f3e8b0d3bd2b8f7535016557.png" alt="alt text"></li>
+<li>80 输入&#x2F;72 输出：最终配置下，通过乒乓重用链从上一个块加载数据，实现 80 个输入和 72 个输出。</li>
+</ul>
+<p>在于 DSP 块相似的面积内。Tensor Block int 8 能够实现 15 倍峰值的 int 8 TOPS（每秒万亿次操作）</p>
+<h2 id="设计后端"><a href="#设计后端" class="headerlink" title="设计后端"></a>设计后端</h2><p>FPGA 架构研究的挑战核心内容：FPGA 架构创新需要解决两大挑战</p>
+<ul>
+<li>缺乏代表性应用设计</li>
+<li>底层电路（面积&#x2F;功耗&#x2F;延迟）的精确描述</li>
+</ul>
+<p>但是新架构需应用验证，但是应用开发又依赖成熟架构。</p>
+<p>例如，AI 加速器设计需特定算子支持，但现有基准测试集（如 MiBench）难以覆盖新兴场景。同时，7 nm 工艺下，互联延迟占比超 60%，传统 SPICE 仿真耗时过长，需要数据驱动的快速评估模型</p>
+<p>VTR (veruling-to-Routing)开源框架的出现，通过参数化架构描述文件 (如. Vtr 格式)实现“一次建模，多次验证”的敏捷开发范式</p>
+<h3 id="VTR-开源工具链"><a href="#VTR-开源工具链" class="headerlink" title="VTR 开源工具链"></a>VTR 开源工具链</h3><p><img src="/assets/24417b93162bac23907ba12061e822e6.jpeg" alt="alt text"><br>VTR 9 (2025) 通过模块化设计实现架构无关性</p>
+<ul>
+<li><strong>前端兼容</strong>：Yosys 处理复杂 RTL, Odin-II 专攻简单逻辑，混合模式提升 40%综合效率</li>
+<li><strong>后端创新</strong>：VPR 的“Pack-Place-Route”流程引入机器学习驱动的拥塞预测器，布线失败率降低 28%</li>
+<li><strong>数据驱动</strong>：架构描述文件 (Arch XML)支持自定义 LUT 配置 (如 6-LUT+4-LUT 混合)、DSP 精度 fp 32&#x2F;fp 16)等参数，为 FPGA 定制化提供基础</li>
+</ul>
+<h3 id="架构灵活性-Blocks-Block-Arrangement-Routing"><a href="#架构灵活性-Blocks-Block-Arrangement-Routing" class="headerlink" title="架构灵活性-Blocks, Block Arrangement, Routing"></a>架构灵活性-Blocks, Block Arrangement, Routing</h3><h4 id="Architecture-Flexibility-Blocks"><a href="#Architecture-Flexibility-Blocks" class="headerlink" title="Architecture Flexibility: Blocks"></a>Architecture Flexibility: Blocks</h4><p><img src="/assets/dc777878cd9b600735210f3c4c7e567d.jpeg" alt="alt text"></p>
+<ul>
+<li>逻辑原语（Logic Primitive）: 最基础的构建单元，如 6-LUT 和 4-LUT, 用于实现基本的逻辑功能</li>
+<li>逻辑单元 (Logic Element): 由多个逻辑原语组合而成，具备更复杂的逻辑处理能力</li>
+<li>逻辑块大小 (Logic Block Size)：不同规模的逻辑块，体现模块的可扩展性</li>
+<li>模块间连接性 (Inter-Element-Connectivity)：不同逻辑单元之间的连接方式</li>
+<li>完整模块 (Full Blocks)：包括 DSP 块和 2 D 系统张量块等专用功能模块，这些模块集成了特定的计算功能，如乘法、加法等</li>
+</ul>
+<p>只要善用这些元素就可以设计出各种各样的电路，可扩展性极高</p>
+<h4 id="Architecture-Flexibility-Block-Arrangement"><a href="#Architecture-Flexibility-Block-Arrangement" class="headerlink" title="Architecture Flexibility: Block Arrangement"></a>Architecture Flexibility: Block Arrangement</h4><p><img src="/assets/f2c53d6d18d760b46db8d4c754ce1619.jpeg" alt="alt text"></p>
+<ul>
+<li>I&#x2F;Os: 输入输出接口，位于芯片边缘，负责与外部设备通信</li>
+<li>逻辑块：主要的逻辑处理单元，分布在芯片内部</li>
+<li>DSP: 数字信号处理模块，用于高效执行数学运算</li>
+<li>Block RAM: 块存储器，提供高速数据存储功能</li>
+<li>NoC Router: 片上网络路由器，用于模块间的高效数据传输</li>
+<li>Hard Block: 硬核模块，如 PCI-E 接口，提供特定的硬件功能</li>
+</ul>
+<h4 id="Architecture-Flexibility-Routing"><a href="#Architecture-Flexibility-Routing" class="headerlink" title="Architecture Flexibility: Routing"></a>Architecture Flexibility: Routing</h4><p><img src="/assets/a5d31e13083dc13f13dc941b464da636.jpeg" alt="alt text"></p>
+<ul>
+<li>直接块间连接 (Direct Block-Block Connection): 模块之间的直接连线，用于快速数据传输</li>
+<li>线间连接 (Wire-Wire Connection)(switch-block): 通过开关块实现的灵活布线，允许任意连个点之间的连接</li>
+<li>布线线 (Routing Wires): 遍布芯片的布线资源，支持复杂的数据路径设计</li>
+<li>块输入&#x2F;输出连接（Block input&#x2F;Output Connection）：模块与布线资源的接口，确保数据的正确输入和输出</li>
+</ul>
+<div class="tip">
+模块构成定义了芯片的基本功能单元及其组合方式，模块布局规划了各功能模块在芯片上的空间分布，布线连接实现了模块间的灵活高效通信
+</div>
+
+<h3 id="NoC-与-3D-集成技术"><a href="#NoC-与-3D-集成技术" class="headerlink" title="NoC 与 3D 集成技术"></a>NoC 与 3D 集成技术</h3><h4 id="芯片强化网络"><a href="#芯片强化网络" class="headerlink" title="芯片强化网络"></a>芯片强化网络</h4><p>Srinivasan 团队 (Adaptive Wormhole)提出“Placement Co-Optimization”，将 NoC 路由器与可编程逻辑布线延迟联合建模，关键路径延迟减少 35%<br><img src="/assets/1c08b68fd4be66b9553cbae025ab336b.jpeg" alt="alt text"></p>
+<h4 id="3D-异构"><a href="#3D-异构" class="headerlink" title="3D 异构"></a>3D 异构</h4><p>通过硅通孔 (TSV)与微凸块 (ubumps)实现计算-存储堆叠，如 Samsung HBM3-PIM3 将 GDDR6 堆叠与 FPGA 逻辑层，能效提升 4.2 倍<br><img src="/assets/40260c24e88e5ff001f19de1e0de43a3.jpeg" alt="alt text"></p>
+<h3 id="定制化-FPGA-实现"><a href="#定制化-FPGA-实现" class="headerlink" title="定制化 FPGA 实现"></a>定制化 FPGA 实现</h3><ul>
+<li>开源工具：OpenFPGA 支持从 VTR 架构文件直接生成标准单元布局，NRE (非重复工程成本)降低 90%</li>
+<li>软核 (Soft Fabric)比全定制方案面积增加 60%，延迟上升 20%，但开发周期从 18 周缩短至 2 周</li>
+<li>Google Edge TPU 的 FP 4 矩阵乘法器，通过专用 LUT 配置实现 8 TOPS&#x2F;W 的能效突破</li>
+</ul>
+<h2 id="吞吐量导向的时空架构-Throughput-Focused-Spatio-Temporal-Arch"><a href="#吞吐量导向的时空架构-Throughput-Focused-Spatio-Temporal-Arch" class="headerlink" title="吞吐量导向的时空架构 (Throughput-Focused Spatio-Temporal Arch)"></a>吞吐量导向的时空架构 (Throughput-Focused Spatio-Temporal Arch)</h2><h3 id="晶圆级集成与-Cerebras"><a href="#晶圆级集成与-Cerebras" class="headerlink" title="晶圆级集成与 Cerebras"></a>晶圆级集成与 Cerebras</h3><p>传统的 HPC 架构，计算节点集群通过外部网络高延迟互联，众多独立的小芯片通过 PCB 板与片外高延迟内存通信。而 Celebras 晶圆级架构，使十万核心平铺于晶圆，通过片上高带宽 Mesh 网络直接、快速互联，使用单一晶圆巨芯片让计算核心与海量片上 SRAM 集成在一起，访存延时极低。</p>
+<p><strong>WSE-3 core架构特点</strong></p>
+<ul>
+<li>最小化指令和控制开销：采用顺序核心 (In-order core)，支持 SIMD (fp 16 和 fp 8)，CISC 指令可处理高达 4 D 张量操作数，类似于 DSP 处理器，每个处理器发出一条指令即可保持所有执行单元的忙碌</li>
+<li>时间灵活性：主线程与 8 个微线程，当主线程等待数据时，可逐周期切换到微线程</li>
+<li>空间特性：近内存计算，核心的一半是 SRAM，实现数据与计算的紧密集成</li>
+</ul>
+<p><img src="/assets/9eed269bd647be172b4a2d8540289d46.jpeg" alt="alt text"></p>
+<h4 id="近内存计算"><a href="#近内存计算" class="headerlink" title="近内存计算"></a>近内存计算</h4><p>Cerebras 的晶圆级引擎是一个单片集成的巨型系统，其核心思路是让计算和存储尽可能近。</p>
+<ul>
+<li>Cerebras WSE-3 (46225 mm^2)集成 2.6 万亿晶体管，相当于 84 颗 GPU 裸片；片上 SRAM 达 44 GB</li>
+<li>超高的带宽互联：所有核心通过一个二维网格网络网格晶圆上直接互联，实现了极高的带宽 21 PB&#x2F;s，超越 HBM3 的 0.008 PB&#x2F;s</li>
+</ul>
+<h4 id="解耦计算与存储"><a href="#解耦计算与存储" class="headerlink" title="解耦计算与存储"></a>解耦计算与存储</h4><ul>
+<li>Weight Streaming (权重流)：模型参数（权重）存储在专用的外部内存系统 MmeroyX 中，可按需“流式”传输到晶圆芯片上进行计算。</li>
+<li>StreamX 互联架构：将芯片内部的高速 Mesh 网络扩展到多台 CS-2 系统之间，集群规模可达 1.63 亿核心<br><img src="/assets/6bc5a5ec85d85c2c9ba306628e185c1e.jpeg" alt="alt text"></li>
+</ul>
+<h4 id="芯片制造"><a href="#芯片制造" class="headerlink" title="芯片制造"></a>芯片制造</h4><p>解决良品率、供电、散热三大问题，Cerebras 的解决方案为：</p>
+<ul>
+<li>冗余设计应对良品率：类似于 Altera FPGA 设计理念，但是细节设计不同，通过冗余链接绕过故障的处理单元 (PE)。在软件上，可以假设一个稍小的完美阵列，无需关心具体的冗余机制</li>
+<li>垂直供电与水冷散热：采用从晶圆背面垂直分层供电的方式，避免因为距离导致的电压不均。同时，为芯片定制了覆盖了每个计算单元的精密水冷系统，确保散热均匀散热</li>
+</ul>
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p>*PPT 及其图示来自 FPT2025讲座——超摩尔与深度学习时代的的空间架构 (Vaughn Betz 教授)</p>
+</div></article></div><aside id="toc" class="post-toc-sidebar"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%83%8C%E6%99%AF%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">背景介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A9%BA%E9%97%B4%E8%AE%A1%E7%AE%97%E5%9C%A8%E6%95%B0%E6%8D%AE%E5%B1%80%E9%83%A8%E6%80%A7%E6%96%B9%E9%9D%A2%E7%9A%84%E4%BC%98%E5%8A%BF"><span class="toc-number">1.1.</span> <span class="toc-text">空间计算在数据局部性方面的优势</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E5%89%8D%E7%AB%AF"><span class="toc-number">2.</span> <span class="toc-text">设计前端</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#HPIPE"><span class="toc-number">2.1.</span> <span class="toc-text">HPIPE</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Overlay-NPU"><span class="toc-number">2.2.</span> <span class="toc-text">Overlay NPU</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%94%AF%E6%8C%81%E7%AE%97%E6%9C%AF%E7%9A%84%E9%80%BB%E8%BE%91%E7%BB%93%E6%9E%84%E4%BC%98%E5%8C%96"><span class="toc-number">2.3.</span> <span class="toc-text">支持算术的逻辑结构优化</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Inter-Stratix-10-NX-%E5%BC%A0%E9%87%8F%E5%9D%97%E7%9A%84%E8%AE%BE%E8%AE%A1%E6%BC%94%E5%8F%98"><span class="toc-number">2.4.</span> <span class="toc-text">Inter Stratix 10 NX 张量块的设计演变</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E8%AE%A1%E5%90%8E%E7%AB%AF"><span class="toc-number">3.</span> <span class="toc-text">设计后端</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#VTR-%E5%BC%80%E6%BA%90%E5%B7%A5%E5%85%B7%E9%93%BE"><span class="toc-number">3.1.</span> <span class="toc-text">VTR 开源工具链</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84%E7%81%B5%E6%B4%BB%E6%80%A7-Blocks-Block-Arrangement-Routing"><span class="toc-number">3.2.</span> <span class="toc-text">架构灵活性-Blocks, Block Arrangement, Routing</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Architecture-Flexibility-Blocks"><span class="toc-number">3.2.1.</span> <span class="toc-text">Architecture Flexibility: Blocks</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Architecture-Flexibility-Block-Arrangement"><span class="toc-number">3.2.2.</span> <span class="toc-text">Architecture Flexibility: Block Arrangement</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Architecture-Flexibility-Routing"><span class="toc-number">3.2.3.</span> <span class="toc-text">Architecture Flexibility: Routing</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NoC-%E4%B8%8E-3D-%E9%9B%86%E6%88%90%E6%8A%80%E6%9C%AF"><span class="toc-number">3.3.</span> <span class="toc-text">NoC 与 3D 集成技术</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8A%AF%E7%89%87%E5%BC%BA%E5%8C%96%E7%BD%91%E7%BB%9C"><span class="toc-number">3.3.1.</span> <span class="toc-text">芯片强化网络</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3D-%E5%BC%82%E6%9E%84"><span class="toc-number">3.3.2.</span> <span class="toc-text">3D 异构</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E5%88%B6%E5%8C%96-FPGA-%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.4.</span> <span class="toc-text">定制化 FPGA 实现</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%9E%E5%90%90%E9%87%8F%E5%AF%BC%E5%90%91%E7%9A%84%E6%97%B6%E7%A9%BA%E6%9E%B6%E6%9E%84-Throughput-Focused-Spatio-Temporal-Arch"><span class="toc-number">4.</span> <span class="toc-text">吞吐量导向的时空架构 (Throughput-Focused Spatio-Temporal Arch)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%99%B6%E5%9C%86%E7%BA%A7%E9%9B%86%E6%88%90%E4%B8%8E-Cerebras"><span class="toc-number">4.1.</span> <span class="toc-text">晶圆级集成与 Cerebras</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%91%E5%86%85%E5%AD%98%E8%AE%A1%E7%AE%97"><span class="toc-number">4.1.1.</span> <span class="toc-text">近内存计算</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A3%E8%80%A6%E8%AE%A1%E7%AE%97%E4%B8%8E%E5%AD%98%E5%82%A8"><span class="toc-number">4.1.2.</span> <span class="toc-text">解耦计算与存储</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%8A%AF%E7%89%87%E5%88%B6%E9%80%A0"><span class="toc-number">4.1.3.</span> <span class="toc-text">芯片制造</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E8%80%83%E8%B5%84%E6%96%99"><span class="toc-number">5.</span> <span class="toc-text">参考资料</span></a></li></ol></aside><a href="#" onclick="toggleTOC();return false;" class="toc-toggle"></a></main><footer><div class="paginator"><a href="/2025/12/10/FPT2025-Wei_Zhang/" class="prev">PREV</a><a href="/2025/11/25/Nixos-vnc/" class="next">NEXT</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'ssfortynine seansun';
+var disqus_identifier = '2025/12/10/FPT2025-vaughn_betz/';
+var disqus_title = '(FPT2025)超摩尔与深度学习时代的的空间架构——Vaughn Betz 教授(多伦多大学&amp; Cerebras Systems)';
+var disqus_url = 'https://ssfortynine.github.io/blog/2025/12/10/FPT2025-vaughn_betz/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//ssfortynine seansun.disqus.com/count.js" async></script><div class="copyright"><p>© 2025 <a href="https://ssfortynine.github.io/blog">ssfortynine</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/ssfortynine/hexo-theme-apollodark" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

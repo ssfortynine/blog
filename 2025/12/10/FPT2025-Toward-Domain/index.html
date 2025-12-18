@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> (FPT2025)Toward Domain-Aware Energy-Efficient Reconfigurable Architectures · ssfortynine's Blog</title><meta name="description" content="(FPT2025)Toward Domain-Aware Energy-Efficient Reconfigurable Architectures - ssfortynine"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/cat.png"><link rel="stylesheet" href="/css/apollodark.css"><link rel="search" type="application/opensearchdescription+xml" href="https://ssfortynine.github.io/blog/atom.xml" title="ssfortynine's Blog"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="ssfortynine's Blog" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/cat.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">WEIBO</a></li><li class="nav-list-item"><a href="https://github.com/ssfortynine" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">(FPT2025)Toward Domain-Aware Energy-Efficient Reconfigurable Architectures</h1><div class="post-info">Dec 10, 2025</div><div class="post-content"><h2 id="研究背景与动机"><a href="#研究背景与动机" class="headerlink" title="研究背景与动机"></a>研究背景与动机</h2><p>当前，工业物联网、智能工厂、智慧医疗和自动驾驶等应用层出不穷，且都运行在边缘设备上。这些边缘设备通常由电池供电，功率预算非常有限。然而，这些应用却在不断演变，需求也在时刻变化。</p>
+<p>为了满足这些应用对<strong>可重构性</strong>（Reconfigurability）和<strong>高能效</strong>（Energy Efficiency）的双重需求，我们需要设计灵活的硬件架构。</p>
+<ul>
+<li><strong>ASIC</strong> 虽然能效高但缺乏灵活性，且非重复工程成本（NRE）高昂。</li>
+<li><strong>FPGA</strong> 虽然灵活，但基于比特级的编程导致能效不如专用电路。</li>
+<li><strong>粗粒度可重构架构（CGRA）</strong> 则提供了一个极佳的中间选择。它由处理单元（PE）阵列组成，通过片上网络互连，支持字级编程，比FPGA更具能效优势。<br><img src="/assets/Pastedimage20251209185226.png" alt="alt text"><br>目前大多数 CGRA 采用<strong>同构</strong>（Homogeneous）设计，即所有 PE 支持相同的操作集。这种“一刀切”的设计会导致严重的功耗浪费，因为实际应用中的操作需求是不规则的。因此，我的研究重点是如何通过<strong>异构</strong>（Heterogeneous）设计，在不牺牲灵活性的前提下，利用<strong>领域感知</strong>（Domain-Aware）的特性来大幅降低功耗。</li>
+</ul>
+<h2 id="核心贡献一：DA-CGRA-架构生成流程"><a href="#核心贡献一：DA-CGRA-架构生成流程" class="headerlink" title="核心贡献一：DA-CGRA 架构生成流程"></a>核心贡献一：DA-CGRA 架构生成流程</h2><p>提出了一种利用编译器信息来设计领域特定 CGRA 的方法，称为 <strong>DA-CGRA</strong>。其生成流程如下：<br><img src="/assets/Pastedimage20251209185242.png" alt="alt text"></p>
+<ul>
+<li><p><strong>性能剖析（Profiling）：</strong><br>  首先，我们从应用代码（如 C 代码）入手，使用 <strong>Morpher</strong> 工具生成数据流图（DFG）。接着，利用 Python 脚本对 DFG 进行深度剖析，提取关键信息，包括操作类型（加、减、乘等）、操作数量、内存访问模式以及循环展开因子。</p>
+</li>
+<li><p><strong>操作融合与PE提取：</strong><br>  在分析DFG时，我们发现乘法器的功耗远高于加&#x2F;减法器（引入乘法会导致PE功耗增加约41%）。为了优化能效，我们在融合同一层级的操作时，避免强制所有PE都包含乘法器。最终，我们设计了三种定制化的PE：</p>
+<ol>
+<li><strong>ALU</strong>：功能最全，支持MAC、加减乘、移位和逻辑运算，主要用于复杂的地址生成（对应幻灯片中的红色PE）。</li>
+<li><strong>RALU (Reduced ALU)</strong>：仅支持乘法、加法和减法，用于核心计算。</li>
+<li><strong>ADD&#x2F;SUB</strong>：仅支持加法和减法，去掉了昂贵的乘法器。<br><img src="/assets/Pastedimage20251209185546.png" alt="alt text"></li>
+</ol>
+</li>
+<li><p><strong>架构实现：</strong><br>  基于上述分析，我们生成了包含 <strong>4x5 PE 阵列</strong> 的异构架构，并在左右两侧配备了多组暂存器存储器（Scratchpad Memory）以支持数据和配置的快速存取。在互连方面，我们采用了<strong>8 端口交叉开关（Crossbar）</strong>，虽然比 4 端口功耗稍高，但支持对角线传输，能显著减少启动间隔（II），从而将整体性能提升 3倍。</p>
+</li>
+</ul>
+<h2 id="核心贡献二：系统级能效优化（SCISSORS-项目）"><a href="#核心贡献二：系统级能效优化（SCISSORS-项目）" class="headerlink" title="核心贡献二：系统级能效优化（SCISSORS 项目）"></a>核心贡献二：系统级能效优化（SCISSORS 项目）</h2><p>除了架构层面的 DA-CGRA，我还研究了系统级的能效优化技术，即 <strong>SCISSORS</strong> 项目。这项技术的核心是利用<strong>近阈值计算</strong>（Near-Threshold Computing）来降低电压，从而节省能耗。</p>
+<ul>
+<li><p><strong>挑战与解决方案：</strong><br>  降低电压会导致时序错误。为了解决这个问题，我们提出了一种基于算法的容错（ABFT）机制。以矩阵乘法为例，我们在硬件中加入了<strong>校验和</strong>（Checksum）计算逻辑</p>
+</li>
+<li><p><strong>动态电压调节：</strong><br>  系统在接收 DMA 数据后计算校验和。如果在计算结果中检测到错误（实际校验和与预期不符），系统会通过反馈机制通知电压调节器。我们在 <strong>Xilinx ZCU 102 FPGA</strong> 板上进行了验证，通过动态调整 PL 端（可编程逻辑端）的电压（VCCINT），找到“首次失效点”（Point of First Failure），使系统在保证精度的前提下运行在最低电压，从而最大化能效。</p>
+</li>
+</ul>
+<h2 id="实验结果与对比评估"><a href="#实验结果与对比评估" class="headerlink" title="实验结果与对比评估"></a>实验结果与对比评估</h2><p>我们使用 Synopsys Design Compiler 在45nm 工艺下对 DA-CGRA 进行了综合，并与现有的先进 CGRA 架构进行了对比，包括同构的 HM-HyCUBE、ADRES，以及异构的 RipTide 和 FLEX。</p>
+<ul>
+<li><strong>能效优势：</strong> DA-CGRA的表现优于FLEX和RipTide。具体数据表明，在运行FFT应用时，DA-CGRA的能效比FLEX提高了 <strong>23%</strong>，比RipTide提高了 <strong>38%</strong>。</li>
+<li><strong>性能提升：</strong> 相比于性能最好的同构架构 HM-HyCUBE，DA-CGRA 实现了 <strong>3.2倍</strong> 的性能提升。</li>
+<li><strong>功耗分布：</strong> 由于我们精简了 PE 结构（去除了不必要的乘法器），大部分功耗被有效用于实际计算和数据存储，显著提升了整体效率。</li>
+</ul>
+<h2 id="总结与未来工作"><a href="#总结与未来工作" class="headerlink" title="总结与未来工作"></a>总结与未来工作</h2><p>论文作者博士工作通过架构级优化（领域感知异构设计）和电路&#x2F;系统级技术（近阈值计算与容错）显著降低了可重构架构的能耗。未来，计划将进一步研究 CGRA 的设计空间探索（DSE）方法论。</p>
+<h2 id="问答环节还原与补充"><a href="#问答环节还原与补充" class="headerlink" title="问答环节还原与补充"></a>问答环节还原与补充</h2><p><strong>问题 1：关于FPGA上的电压调节</strong></p>
+<ul>
+<li><strong>提问</strong>：你在FPGA板上测试了这个系统，但我通过编程很难直接调整FPGA的电压，你是怎么做到的？</li>
+<li><strong>回答</strong>：是的，我们实际上使用了 <strong>PMBus</strong> 接口。通过I2C总线，我们可以控制板上的电压调节器。这是通过PS端（处理器系统）来完成的，我们编写了程序来动态调整VCCINT（内核电压）、VCCBRAM（块RAM电压）以及辅助电路的电压。我们可以单独调节，也可以一起调节，从而实现欠压测试。</li>
+</ul>
+<p><strong>问题 2：关于失效点与频率的关系</strong></p>
+<ul>
+<li><strong>提问</strong>：在低频率下，失效点似乎向后移动了。你们测试过更低的频率吗？比如100MHz？</li>
+<li><strong>回答</strong>：我们测试了不同的频率。正如结果所示，在200MHz以下我们几乎没有观察到错误。当频率较高（如250MHz）时，错误会在较高的电压下就开始出现；而频率较低（如215MHz）时，我们可以在更低的电压下才观察到错误。这取决于加速器的关键路径延迟和我们设定的频率。</li>
+</ul>
+<p><strong>问题 3：关于Morpher工具的使用</strong></p>
+<ul>
+<li><strong>提问</strong>：你在DFG生成过程中提到了Morpher工具，操作融合是自动完成的吗？</li>
+<li><strong>回答</strong>：Morpher主要用于生成数据流图（DFG）。至于操作融合和架构参数提取，是通过我们编写的 <strong>Python脚本</strong> 完成的。例如，脚本会识别DFG中用于地址生成的多个节点，并将它们合并，或者决定哪些加减法操作可以共用一个PE。这不是Morpher自带的功能，而是我们的贡献。</li>
+</ul>
+<p><strong>问题 4：关于开源计划</strong></p>
+<ul>
+<li><strong>提问</strong>：你计划开源你的代码吗？</li>
+<li><strong>回答</strong>：目前我还在攻读博士学位，正在整理相关工作。在完成博士学位后，我计划将部分代码开源。</li>
+</ul>
+<p><strong>问题 5：关于互连网络的优化</strong></p>
+<ul>
+<li><strong>提问</strong>：在架构生成中，针对互连网络（Interconnect）有没有做专门的优化？</li>
+<li><strong>回答</strong>：在互连方面，我们主要采用了 <strong>8端口交叉开关（8-output Crossbar）</strong>。虽然这比4端口更复杂，但鉴于我们采用了异构PE设计，我们需要更灵活的路由来保证数据流通，这能提供更高的并行度和旁路能力。所以目前的重点是灵活性，针对互连的深度定制优化在这一版中不是核心重点。</li>
+</ul>
+</div></article></div><aside id="toc" class="post-toc-sidebar"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A0%94%E7%A9%B6%E8%83%8C%E6%99%AF%E4%B8%8E%E5%8A%A8%E6%9C%BA"><span class="toc-number">1.</span> <span class="toc-text">研究背景与动机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E8%B4%A1%E7%8C%AE%E4%B8%80%EF%BC%9ADA-CGRA-%E6%9E%B6%E6%9E%84%E7%94%9F%E6%88%90%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">核心贡献一：DA-CGRA 架构生成流程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%BF%83%E8%B4%A1%E7%8C%AE%E4%BA%8C%EF%BC%9A%E7%B3%BB%E7%BB%9F%E7%BA%A7%E8%83%BD%E6%95%88%E4%BC%98%E5%8C%96%EF%BC%88SCISSORS-%E9%A1%B9%E7%9B%AE%EF%BC%89"><span class="toc-number">3.</span> <span class="toc-text">核心贡献二：系统级能效优化（SCISSORS 项目）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C%E4%B8%8E%E5%AF%B9%E6%AF%94%E8%AF%84%E4%BC%B0"><span class="toc-number">4.</span> <span class="toc-text">实验结果与对比评估</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%E4%B8%8E%E6%9C%AA%E6%9D%A5%E5%B7%A5%E4%BD%9C"><span class="toc-number">5.</span> <span class="toc-text">总结与未来工作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%97%AE%E7%AD%94%E7%8E%AF%E8%8A%82%E8%BF%98%E5%8E%9F%E4%B8%8E%E8%A1%A5%E5%85%85"><span class="toc-number">6.</span> <span class="toc-text">问答环节还原与补充</span></a></li></ol></aside><a href="#" onclick="toggleTOC();return false;" class="toc-toggle"></a></main><footer><div class="paginator"><a href="/2025/12/10/FPT2025-LL-ViT/" class="prev">PREV</a><a href="/2025/12/10/FPT2025-da4ml/" class="next">NEXT</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'ssfortynine seansun';
+var disqus_identifier = '2025/12/10/FPT2025-Toward-Domain/';
+var disqus_title = '(FPT2025)Toward Domain-Aware Energy-Efficient Reconfigurable Architectures';
+var disqus_url = 'https://ssfortynine.github.io/blog/2025/12/10/FPT2025-Toward-Domain/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//ssfortynine seansun.disqus.com/count.js" async></script><div class="copyright"><p>© 2025 <a href="https://ssfortynine.github.io/blog">ssfortynine</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/ssfortynine/hexo-theme-apollodark" target="_blank">hexo-theme-apollo</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>
