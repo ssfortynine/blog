@@ -3,11 +3,11 @@
   <title>ssfortynine&#39;s Blog</title>
   
   
-  <link href="https://ssfortynine.github.io/blog/atom.xml" rel="self"/>
+  <link href="https://ssfortynine.xyz/sitemap.xml/atom.xml" rel="self"/>
   
-  <link href="https://ssfortynine.github.io/blog/"/>
+  <link href="https://ssfortynine.xyz/sitemap.xml/"/>
   <updated>2025-12-18T12:05:35.680Z</updated>
-  <id>https://ssfortynine.github.io/blog/</id>
+  <id>https://ssfortynine.xyz/sitemap.xml/</id>
   
   <author>
     <name>ssfortynine</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>看懂chisel-nix项目中的nix框架设计</title>
-    <link href="https://ssfortynine.github.io/blog/2025/12/18/Nix-chisel-nix/"/>
-    <id>https://ssfortynine.github.io/blog/2025/12/18/Nix-chisel-nix/</id>
+    <link href="https://ssfortynine.xyz/sitemap.xml/2025/12/18/Nix-chisel-nix/"/>
+    <id>https://ssfortynine.xyz/sitemap.xml/2025/12/18/Nix-chisel-nix/</id>
     <published>2025-12-18T09:12:00.000Z</published>
     <updated>2025-12-18T12:05:35.680Z</updated>
     
@@ -39,8 +39,8 @@
   
   <entry>
     <title>用 Rust 构建一个实时的终端网络流量监控器</title>
-    <link href="https://ssfortynine.github.io/blog/2025/12/18/Rust-net-monitor/"/>
-    <id>https://ssfortynine.github.io/blog/2025/12/18/Rust-net-monitor/</id>
+    <link href="https://ssfortynine.xyz/sitemap.xml/2025/12/18/Rust-net-monitor/"/>
+    <id>https://ssfortynine.xyz/sitemap.xml/2025/12/18/Rust-net-monitor/</id>
     <published>2025-12-18T08:58:07.000Z</published>
     <updated>2025-12-18T09:10:47.552Z</updated>
     
@@ -55,14 +55,14 @@
     
     
     
-    <category term="Rust" scheme="https://ssfortynine.github.io/blog/tags/Rust/"/>
+    <category term="Rust" scheme="https://ssfortynine.xyz/sitemap.xml/tags/Rust/"/>
     
   </entry>
   
   <entry>
     <title>(FPT2025)LL-ViT</title>
-    <link href="https://ssfortynine.github.io/blog/2025/12/10/FPT2025-LL-ViT/"/>
-    <id>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-LL-ViT/</id>
+    <link href="https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-LL-ViT/"/>
+    <id>https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-LL-ViT/</id>
     <published>2025-12-10T09:15:56.000Z</published>
     <updated>2025-12-11T10:52:47.137Z</updated>
     
@@ -77,14 +77,14 @@
     
     
     
-    <category term="Conference" scheme="https://ssfortynine.github.io/blog/tags/Conference/"/>
+    <category term="Conference" scheme="https://ssfortynine.xyz/sitemap.xml/tags/Conference/"/>
     
   </entry>
   
   <entry>
     <title>(FPT2025)Toward Domain-Aware Energy-Efficient Reconfigurable Architectures</title>
-    <link href="https://ssfortynine.github.io/blog/2025/12/10/FPT2025-Toward-Domain/"/>
-    <id>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-Toward-Domain/</id>
+    <link href="https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-Toward-Domain/"/>
+    <id>https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-Toward-Domain/</id>
     <published>2025-12-10T09:15:43.000Z</published>
     <updated>2025-12-11T10:46:21.249Z</updated>
     
@@ -99,14 +99,14 @@
     
     
     
-    <category term="Conference" scheme="https://ssfortynine.github.io/blog/tags/Conference/"/>
+    <category term="Conference" scheme="https://ssfortynine.xyz/sitemap.xml/tags/Conference/"/>
     
   </entry>
   
   <entry>
     <title>(FPT2025)da4ml:针对 FPGA 上超低延迟神经网络的快速、可扩展且精确的 CMVM 优化框架</title>
-    <link href="https://ssfortynine.github.io/blog/2025/12/10/FPT2025-da4ml/"/>
-    <id>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-da4ml/</id>
+    <link href="https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-da4ml/"/>
+    <id>https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-da4ml/</id>
     <published>2025-12-10T09:15:24.000Z</published>
     <updated>2025-12-11T10:45:12.215Z</updated>
     
@@ -124,14 +124,14 @@
     
     
     
-    <category term="Conference" scheme="https://ssfortynine.github.io/blog/tags/Conference/"/>
+    <category term="Conference" scheme="https://ssfortynine.xyz/sitemap.xml/tags/Conference/"/>
     
   </entry>
   
   <entry>
     <title>(FPT2025)Poco-为任务并行 HLS 编程扩展多生产者多消费者缓冲区支持的新框架</title>
-    <link href="https://ssfortynine.github.io/blog/2025/12/10/FPT2025-Poco/"/>
-    <id>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-Poco/</id>
+    <link href="https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-Poco/"/>
+    <id>https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-Poco/</id>
     <published>2025-12-10T09:15:18.000Z</published>
     <updated>2025-12-11T09:24:04.219Z</updated>
     
@@ -147,14 +147,14 @@
     
     
     
-    <category term="Conference" scheme="https://ssfortynine.github.io/blog/tags/Conference/"/>
+    <category term="Conference" scheme="https://ssfortynine.xyz/sitemap.xml/tags/Conference/"/>
     
   </entry>
   
   <entry>
     <title>(FPT2025)OpenDRAM</title>
-    <link href="https://ssfortynine.github.io/blog/2025/12/10/FPT2025-OpenDRAM/"/>
-    <id>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-OpenDRAM/</id>
+    <link href="https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-OpenDRAM/"/>
+    <id>https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-OpenDRAM/</id>
     <published>2025-12-10T09:15:12.000Z</published>
     <updated>2025-12-11T09:17:36.966Z</updated>
     
@@ -169,14 +169,14 @@
     
     
     
-    <category term="Conference" scheme="https://ssfortynine.github.io/blog/tags/Conference/"/>
+    <category term="Conference" scheme="https://ssfortynine.xyz/sitemap.xml/tags/Conference/"/>
     
   </entry>
   
   <entry>
     <title>(FPT2025)Fusion SoC Workshop</title>
-    <link href="https://ssfortynine.github.io/blog/2025/12/10/FPT2025-Fusion-SoC-Workshop/"/>
-    <id>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-Fusion-SoC-Workshop/</id>
+    <link href="https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-Fusion-SoC-Workshop/"/>
+    <id>https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-Fusion-SoC-Workshop/</id>
     <published>2025-12-10T09:15:03.000Z</published>
     <updated>2025-12-11T09:03:32.125Z</updated>
     
@@ -191,14 +191,14 @@
     
     
     
-    <category term="Conference" scheme="https://ssfortynine.github.io/blog/tags/Conference/"/>
+    <category term="Conference" scheme="https://ssfortynine.xyz/sitemap.xml/tags/Conference/"/>
     
   </entry>
   
   <entry>
     <title>(FPT2025)AMD Turtorial</title>
-    <link href="https://ssfortynine.github.io/blog/2025/12/10/FPT2025-AMD-Turtorial/"/>
-    <id>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-AMD-Turtorial/</id>
+    <link href="https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-AMD-Turtorial/"/>
+    <id>https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-AMD-Turtorial/</id>
     <published>2025-12-10T09:14:08.000Z</published>
     <updated>2025-12-11T08:53:00.925Z</updated>
     
@@ -213,14 +213,14 @@
     
     
     
-    <category term="Conference" scheme="https://ssfortynine.github.io/blog/tags/Conference/"/>
+    <category term="Conference" scheme="https://ssfortynine.xyz/sitemap.xml/tags/Conference/"/>
     
   </entry>
   
   <entry>
     <title>(FPT2025)可重构机器学习处理器：基本概念、应用与未来趋势——尹首一教授（清华大学）</title>
-    <link href="https://ssfortynine.github.io/blog/2025/12/10/FPT2025-Shouyi_Yin/"/>
-    <id>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-Shouyi_Yin/</id>
+    <link href="https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-Shouyi_Yin/"/>
+    <id>https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-Shouyi_Yin/</id>
     <published>2025-12-10T09:12:53.000Z</published>
     <updated>2025-12-11T08:50:52.222Z</updated>
     
@@ -235,14 +235,14 @@
     
     
     
-    <category term="Conference" scheme="https://ssfortynine.github.io/blog/tags/Conference/"/>
+    <category term="Conference" scheme="https://ssfortynine.xyz/sitemap.xml/tags/Conference/"/>
     
   </entry>
   
   <entry>
     <title>(FPT2025)简化FPGA开发：敏捷设计流程带来的挑战和机遇——张薇教授（香港科技大学）</title>
-    <link href="https://ssfortynine.github.io/blog/2025/12/10/FPT2025-Wei_Zhang/"/>
-    <id>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-Wei_Zhang/</id>
+    <link href="https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-Wei_Zhang/"/>
+    <id>https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-Wei_Zhang/</id>
     <published>2025-12-10T09:09:27.000Z</published>
     <updated>2025-12-11T08:44:02.446Z</updated>
     
@@ -257,14 +257,14 @@
     
     
     
-    <category term="Conference" scheme="https://ssfortynine.github.io/blog/tags/Conference/"/>
+    <category term="Conference" scheme="https://ssfortynine.xyz/sitemap.xml/tags/Conference/"/>
     
   </entry>
   
   <entry>
     <title>(FPT2025)超摩尔与深度学习时代的的空间架构——Vaughn Betz 教授(多伦多大学&amp; Cerebras Systems)</title>
-    <link href="https://ssfortynine.github.io/blog/2025/12/10/FPT2025-vaughn_betz/"/>
-    <id>https://ssfortynine.github.io/blog/2025/12/10/FPT2025-vaughn_betz/</id>
+    <link href="https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-vaughn_betz/"/>
+    <id>https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-vaughn_betz/</id>
     <published>2025-12-10T09:07:55.000Z</published>
     <updated>2025-12-11T12:11:54.597Z</updated>
     
@@ -279,14 +279,14 @@
     
     
     
-    <category term="Conference" scheme="https://ssfortynine.github.io/blog/tags/Conference/"/>
+    <category term="Conference" scheme="https://ssfortynine.xyz/sitemap.xml/tags/Conference/"/>
     
   </entry>
   
   <entry>
     <title>设置NixOS服务器-vnc</title>
-    <link href="https://ssfortynine.github.io/blog/2025/11/25/Nixos-vnc/"/>
-    <id>https://ssfortynine.github.io/blog/2025/11/25/Nixos-vnc/</id>
+    <link href="https://ssfortynine.xyz/sitemap.xml/2025/11/25/Nixos-vnc/"/>
+    <id>https://ssfortynine.xyz/sitemap.xml/2025/11/25/Nixos-vnc/</id>
     <published>2025-11-25T11:27:21.000Z</published>
     <updated>2025-12-11T07:58:58.490Z</updated>
     
@@ -302,14 +302,14 @@
     
     
     
-    <category term="Tools" scheme="https://ssfortynine.github.io/blog/tags/Tools/"/>
+    <category term="Tools" scheme="https://ssfortynine.xyz/sitemap.xml/tags/Tools/"/>
     
   </entry>
   
   <entry>
     <title>Obsidian-NAS极空间-Cpolar同步</title>
-    <link href="https://ssfortynine.github.io/blog/2025/11/21/Obsidian-NAS%E6%9E%81%E7%A9%BA%E9%97%B4-Cpolar%E5%90%8C%E6%AD%A5/"/>
-    <id>https://ssfortynine.github.io/blog/2025/11/21/Obsidian-NAS%E6%9E%81%E7%A9%BA%E9%97%B4-Cpolar%E5%90%8C%E6%AD%A5/</id>
+    <link href="https://ssfortynine.xyz/sitemap.xml/2025/11/21/Obsidian-NAS%E6%9E%81%E7%A9%BA%E9%97%B4-Cpolar%E5%90%8C%E6%AD%A5/"/>
+    <id>https://ssfortynine.xyz/sitemap.xml/2025/11/21/Obsidian-NAS%E6%9E%81%E7%A9%BA%E9%97%B4-Cpolar%E5%90%8C%E6%AD%A5/</id>
     <published>2025-11-21T08:52:00.000Z</published>
     <updated>2025-12-11T07:59:00.928Z</updated>
     
@@ -325,14 +325,14 @@
     
     
     
-    <category term="Obsidian" scheme="https://ssfortynine.github.io/blog/tags/Obsidian/"/>
+    <category term="Obsidian" scheme="https://ssfortynine.xyz/sitemap.xml/tags/Obsidian/"/>
     
   </entry>
   
   <entry>
     <title>芯动力——硬件加速设计方法</title>
-    <link href="https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/"/>
-    <id>https://ssfortynine.github.io/blog/2024/07/25/HardwareDesign1/</id>
+    <link href="https://ssfortynine.xyz/sitemap.xml/2024/07/25/HardwareDesign1/"/>
+    <id>https://ssfortynine.xyz/sitemap.xml/2024/07/25/HardwareDesign1/</id>
     <published>2024-07-24T19:51:43.000Z</published>
     <updated>2025-12-11T07:58:53.345Z</updated>
     
@@ -348,14 +348,14 @@
     
     
     
-    <category term="FPGA" scheme="https://ssfortynine.github.io/blog/tags/FPGA/"/>
+    <category term="FPGA" scheme="https://ssfortynine.xyz/sitemap.xml/tags/FPGA/"/>
     
   </entry>
   
   <entry>
     <title>Zerotier-Archlinux-Termius互通教程</title>
-    <link href="https://ssfortynine.github.io/blog/2024/07/24/Zerotier/"/>
-    <id>https://ssfortynine.github.io/blog/2024/07/24/Zerotier/</id>
+    <link href="https://ssfortynine.xyz/sitemap.xml/2024/07/24/Zerotier/"/>
+    <id>https://ssfortynine.xyz/sitemap.xml/2024/07/24/Zerotier/</id>
     <published>2024-07-24T06:23:09.000Z</published>
     <updated>2024-09-29T14:25:59.821Z</updated>
     
@@ -371,7 +371,7 @@
     
     
     
-    <category term="Tool" scheme="https://ssfortynine.github.io/blog/tags/Tool/"/>
+    <category term="Tool" scheme="https://ssfortynine.xyz/sitemap.xml/tags/Tool/"/>
     
   </entry>
   
