@@ -1,5 +1,5 @@
+https://ssfortynine.xyz/sitemap.xml/2025/12/21/Rust-net-monitor/
 https://ssfortynine.xyz/sitemap.xml/2025/12/18/Nix-chisel-nix/
-https://ssfortynine.xyz/sitemap.xml/2025/12/18/Rust-net-monitor/
 https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-vaughn_betz/
 https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-LL-ViT/
 https://ssfortynine.xyz/sitemap.xml/2025/12/10/FPT2025-Toward-Domain/
@@ -21,5 +21,4 @@ https://ssfortynine.xyz/sitemap.xml/tags/Conference/
 https://ssfortynine.xyz/sitemap.xml/tags/FPGA/
 https://ssfortynine.xyz/sitemap.xml/tags/Tools/
 https://ssfortynine.xyz/sitemap.xml/tags/Obsidian/
-https://ssfortynine.xyz/sitemap.xml/tags/Rust/
 https://ssfortynine.xyz/sitemap.xml/tags/Tool/
