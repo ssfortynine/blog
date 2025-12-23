@@ -478,7 +478,42 @@ header .nav-list-item a {
   font-size: 16px;
   line-height: 1.4;
 }
+header .logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+header .logo-link:after {
+  content: "ssfortynine's blog";
+  margin-left: 15px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #c9cacc;
+  font-family: "sourcesanspro", "Helvetica Neue", Arial, sans-serif;
+  letter-spacing: 1px;
+  animation: fadeInName 1.5s ease;
+}
+header .logo-link:hover:after {
+  color: #42b983;
+}
 
+@keyframes fadeInName {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+/* 移动端适配：如果屏幕太小，缩小文字 */
+@media screen and (max-width: 480px) {
+  header .logo-link:after {
+    font-size: 0.9rem;
+    margin-left: 10px;
+  }
+}
 .home.post-list {
   margin: 2em 0;
 }
@@ -500,31 +535,231 @@ header .nav-list-item a {
 }
 
 .archive {
-  max-width: 500px;
-  margin: 5em auto;
+  max-width: 700px;
+  margin: 4em auto;
 }
 .archive .post-item {
-  display: inline-block;
-  padding: 2px 0 0 50px;
+  display: flex;
+  align-items: baseline;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
-.archive .post-time,
-.archive .post-title-link {
-  font-size: 1rem;
-}
-.archive .post-title-link {
-  display: block;
-  margin-left: 125px;
-  color: #42b983;
-  word-break: break-all;
-}
-.archive .post-title-link:hover {
-  border-bottom: 0;
-  color: #267B54;
-}
-.archive .post-info {
-  float: left;
-  width: 125px;
+.archive .post-item .post-date {
+  width: 120px;
+  min-width: 120px;
   color: #7f8c8d;
+  font-size: 13px;
+  flex-shrink: 0;
+}
+.archive .post-item .post-title-link {
+  font-size: 13px;
+  color: #42b983;
+  text-decoration: none;
+  word-break: break-word;
+  margin-left: 20px;
+  line-height: 1.4;
+}
+.archive .post-item .post-title-link:hover {
+  color: #2bbc8a;
+  border-bottom: 1px solid #42b983;
+}
+
+.post-tags {
+  margin-left: 15px;
+  font-size: 13px;
+}
+.post-tags .post-tag-link {
+  color: #7f8c8d;
+  margin-right: 8px;
+  text-decoration: none;
+}
+.post-tags .post-tag-link:hover {
+  color: #42b983;
+}
+
+.tags {
+  margin-top: 2em;
+}
+.tags .tag-cloud {
+  margin: 3em 0;
+  text-align: center;
+}
+.tags .tag-cloud a {
+  margin: 0 12px;
+  text-decoration: none;
+}
+.tags .tag-cloud a:hover {
+  opacity: 0.8;
+}
+.tags .tag-list {
+  padding: 0;
+  list-style: none;
+}
+.tags .tag-list .tag-list-item {
+  display: inline-block;
+  margin: 0 20px 15px 0;
+}
+.tags .tag-list .tag-list-item a {
+  color: #c9cacc;
+  font-size: 15px;
+}
+.tags .tag-list .tag-list-item a:hover {
+  color: #42b983;
+}
+.tags .tag-list .tag-list-item .tag-count {
+  font-size: 12px;
+  color: #7f8c8d;
+  vertical-align: super;
+}
+.tags .tag-cloud a {
+  display: inline-block;
+  margin: 0 12px;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+.tags .tag-cloud a:hover {
+  color: #42b983 !important;
+  transform: scale(1.1);
+}
+
+.tag-pill {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+  padding: 2px 10px;
+  background-color: rgba(66, 185, 131, 0.08);
+  border: 1px solid rgba(66, 185, 131, 0.3);
+  border-radius: 12px;
+  color: #42b983 !important;
+  font-size: 12px;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+.tag-pill .hash {
+  opacity: 0.6;
+  margin-right: 2px;
+  font-weight: bold;
+}
+.tag-pill:hover {
+  background-color: #42b983;
+  color: #1d1f21 !important;
+  border-color: #42b983;
+  transform: translateY(-1px);
+}
+.tag-pill:hover .hash {
+  opacity: 1;
+}
+
+.post-footer-tags {
+  margin-top: 50px;
+  padding-top: 20px;
+  border-top: 1px dashed #333;
+}
+.post-footer-tags .tag-pill {
+  margin-left: 0;
+  margin-right: 12px;
+  margin-bottom: 10px;
+  padding: 4px 12px;
+  font-size: 13px;
+}
+
+.post-info {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  line-height: 2;
+}
+
+.tags-container {
+  max-width: 600px;
+  margin: 3em auto;
+  padding: 0 20px;
+}
+.tags-container .archive-year {
+  display: flex;
+  align-items: baseline;
+  font-size: 20px;
+  color: #c9cacc;
+  margin: 1.5em 0 10px;
+  font-weight: bold;
+}
+.tags-container .archive-year .header-tag-name {
+  margin-left: 15px;
+  font-size: 14px;
+  color: #42b983;
+  font-weight: normal;
+  opacity: 0.8;
+}
+.tags-container .post-list {
+  padding: 0;
+  list-style: none;
+}
+.tags-container .post-item {
+  display: flex;
+  align-items: center;
+  padding: 4px 0;
+  border: none;
+}
+.tags-container .post-item .post-time-block {
+  width: 100px;
+  min-width: 100px;
+  margin-right: 20px;
+  flex-shrink: 0;
+}
+.tags-container .post-item .post-time-block .post-date {
+  font-size: 11px;
+  color: #7f8c8d;
+  line-height: 1;
+}
+.tags-container .post-item .post-title-link {
+  font-size: 14px;
+  color: #42b983;
+  text-decoration: none;
+  line-height: 1.4;
+  transition: all 0.2s;
+}
+.tags-container .post-item .post-title-link:hover {
+  opacity: 0.8;
+  border-bottom: 1px solid #42b983;
+}
+
+.tag-cloud-container {
+  border-bottom: 1px solid #333;
+  padding: 20px 0 30px 0;
+  margin-bottom: 40px !important;
+  line-height: 2.5;
+  text-align: left;
+}
+.tag-cloud-container a {
+  display: inline-flex;
+  align-items: center;
+  margin: 5px 12px 5px 0;
+  padding: 2px 14px;
+  border: 1px solid rgba(66, 185, 131, 0.4);
+  border-radius: 20px;
+  background-color: transparent;
+  color: #7f8c8d !important;
+  font-size: 13px !important;
+  text-decoration: none;
+  transition: all 0.3s ease-in-out;
+  font-weight: 400;
+}
+.tag-cloud-container a:hover {
+  color: #1d1f21 !important;
+  background-color: #42b983;
+  border-color: #42b983;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(66, 185, 131, 0.2);
+}
+.tag-cloud-container a::before {
+  content: "#";
+  margin-right: 4px;
+  opacity: 0.5;
+}
+
+.tags-container .post-item {
+  align-items: center;
 }
 
 .post {
@@ -541,7 +776,7 @@ header .nav-list-item a {
   margin: 1.2em 0;
 }
 .post-block .post-info span {
-  margin-left: 0.5rem;
+  margin-left: 0rem;
 }
 .post-block .post-info a.post-from {
   margin-left: 0.5rem;
