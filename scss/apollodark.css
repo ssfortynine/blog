@@ -507,7 +507,6 @@ header .logo-link:hover:after {
     transform: translateX(0);
   }
 }
-/* 移动端适配：如果屏幕太小，缩小文字 */
 @media screen and (max-width: 480px) {
   header .logo-link:after {
     font-size: 0.9rem;
@@ -1079,22 +1078,18 @@ pre .xml .cdata {
   opacity: 0.5;
 }
 
-/* ==========================================================
-   TOC 目录 - 左侧版 (Cactus 深色适配)
-   ========================================================== */
 #toc {
   position: fixed;
-  left: 2rem; /* 改为左侧定位 */
+  left: 2rem;
   top: 8rem;
   z-index: 99;
   display: inline-block;
   width: 18rem;
   max-height: 85vh;
   overflow-y: auto;
-  text-align: left; /* 文字改为左对齐 */
+  text-align: left;
   font-size: 13px;
   line-height: 1.6;
-  /* 隐藏滚动条 */
   scrollbar-width: none;
 }
 
@@ -1102,17 +1097,15 @@ pre .xml .cdata {
   display: none;
 }
 
-/* 基础列表重置 */
 #toc ol {
   list-style: none !important;
   margin: 0;
   padding: 0;
 }
 
-/* 链接通用样式 */
 #toc a.toc-link {
   display: block;
-  color: #888; /* 默认灰色 */
+  color: #888;
   text-decoration: none;
   transition: all 0.2s ease-in-out;
   padding: 3px 0;
@@ -1121,7 +1114,6 @@ pre .xml .cdata {
   text-overflow: ellipsis;
 }
 
-/* 鼠标悬停高亮 */
 #toc a.toc-link:hover {
   color: #2bbc8a;
 }
@@ -1130,26 +1122,20 @@ pre .xml .cdata {
   display: none;
 }
 
-/* -------------------
-   层级样式控制 (左侧缩进)
-   ------------------- */
-/* Level 1 (H1) */
 #toc .toc-level-1 {
   display: none;
 }
 
-/* Level 2 (H2) - 主标题 */
 #toc .toc-level-2 {
   margin-top: 10px;
 }
 
 #toc .toc-level-2 > a.toc-link {
-  color: #dddddd; /* 亮白 */
+  color: #dddddd;
   font-weight: bold;
   font-size: 14px;
 }
 
-/* H2 前缀 # */
 #toc .toc-level-2 > a.toc-link:before {
   content: "# ";
   color: #2bbc8a;
@@ -1157,9 +1143,8 @@ pre .xml .cdata {
   margin-right: 5px;
 }
 
-/* Level 3 (H3) - 子标题 */
 #toc .toc-level-3 {
-  padding-left: 15px; /* 改为左侧缩进 1阶 */
+  padding-left: 15px;
   font-size: 13px;
 }
 
@@ -1167,7 +1152,6 @@ pre .xml .cdata {
   color: #aaaaaa;
 }
 
-/* H3 前缀 # */
 #toc .toc-level-3 > a.toc-link:before {
   content: "# ";
   color: #2bbc8a;
@@ -1177,10 +1161,9 @@ pre .xml .cdata {
   font-size: 0.9em;
 }
 
-/* Level 4 (H4) - 孙标题 */
 #toc .toc-level-4 {
   display: block;
-  padding-left: 30px; /* 改为左侧缩进 2阶 */
+  padding-left: 30px;
   font-size: 12px;
 }
 
@@ -1188,26 +1171,95 @@ pre .xml .cdata {
   color: #777777;
 }
 
-/* Level 5 & 6 */
 #toc .toc-level-5,
 #toc .toc-level-6 {
   display: none;
 }
 
-/* -------------------
-   激活状态 (Active) - 左边框
-   ------------------- */
 #toc .toc-item.active > a.toc-link {
   color: #2bbc8a !important;
-  /* 边框移到左边 */
   border-left: 3px solid #2bbc8a;
-  /* 调整内边距和外边距，让高亮条贴在屏幕最左边缘 */
   padding-left: 10px;
   margin-left: -2rem;
-  /* 背景渐变方向改为从左到右 */
   background: linear-gradient(to right, rgba(43, 188, 138, 0.1), transparent);
 }
 
+/* --- 移动端适配优化版 --- */
+@media screen and (max-width: 768px) {
+  #toc {
+    position: fixed;
+    left: auto;
+    right: 20px;
+    bottom: 20px;
+    top: auto;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #2bbc8a;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 9999;
+    overflow: hidden; /* 关键：隐藏溢出的文字 */
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    padding: 0;
+    /* 1. 强制隐藏原本的内容（包括那个“总结”标题和列表） */
+    /* 2. 制作一个干净的图标 */
+    /* 3. 展开状态 */
+  }
+  #toc > * {
+    display: none !important;
+  }
+  #toc::before {
+    display: flex !important; /* 强制显示 */
+    content: "≡"; /* 使用三道杠菜单符号 */
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    width: 48px;
+    height: 48px;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    cursor: pointer;
+  }
+  #toc:hover, #toc:active {
+    width: 260px;
+    height: auto;
+    max-height: 70vh;
+    border-radius: 12px;
+    background: #1e1e1e;
+    padding: 15px;
+    overflow-y: auto;
+    /* 展开后隐藏图标 */
+    /* 展开后显示原本的内容 */
+    /* 针对 Apollo 可能存在的标题进行样式微调 */
+  }
+  #toc:hover::before, #toc:active::before {
+    display: none !important;
+  }
+  #toc:hover > *, #toc:active > * {
+    display: block !important;
+  }
+  #toc:hover .toc-title, #toc:active .toc-title {
+    display: block !important;
+    color: #2bbc8a;
+    margin-bottom: 10px;
+    font-size: 14px;
+    border-bottom: 1px solid #333;
+    padding-bottom: 5px;
+  }
+  #toc:hover ol, #toc:active ol {
+    display: block !important;
+    padding-left: 0;
+  }
+  /* 适配移动端链接点击 */
+  #toc .toc-link {
+    white-space: normal;
+    padding: 8px 0;
+    display: block;
+  }
+}
 .paginator {
   margin: 4em 0;
   text-align: center;

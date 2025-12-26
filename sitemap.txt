@@ -21,6 +21,6 @@ https://ssfortynine.xyz/sitemap.xml
 https://ssfortynine.xyz/sitemap.xml/tags/Conference/
 https://ssfortynine.xyz/sitemap.xml/tags/FPGA/
 https://ssfortynine.xyz/sitemap.xml/tags/Tools/
+https://ssfortynine.xyz/sitemap.xml/tags/Obsidian/
 https://ssfortynine.xyz/sitemap.xml/tags/Rust/
 https://ssfortynine.xyz/sitemap.xml/tags/Tool/
-https://ssfortynine.xyz/sitemap.xml/tags/Obsidian/
