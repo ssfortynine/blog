@@ -175,7 +175,7 @@
 
   <url>
     <loc>https://ssfortynine.xyz/sitemap.xml</loc>
-    <lastmod>2025-12-26</lastmod>
+    <lastmod>2025-12-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -183,42 +183,42 @@
   
   <url>
     <loc>https://ssfortynine.xyz/sitemap.xml/tags/Conference/</loc>
-    <lastmod>2025-12-26</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://ssfortynine.xyz/sitemap.xml/tags/FPGA/</loc>
-    <lastmod>2025-12-26</lastmod>
+    <lastmod>2025-12-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://ssfortynine.xyz/sitemap.xml/tags/Tools/</loc>
-    <lastmod>2025-12-26</lastmod>
+    <lastmod>2025-12-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://ssfortynine.xyz/sitemap.xml/tags/Obsidian/</loc>
-    <lastmod>2025-12-26</lastmod>
+    <lastmod>2025-12-28</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://ssfortynine.xyz/sitemap.xml/tags/FPGA/</loc>
+    <lastmod>2025-12-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://ssfortynine.xyz/sitemap.xml/tags/Rust/</loc>
-    <lastmod>2025-12-26</lastmod>
+    <lastmod>2025-12-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
     <loc>https://ssfortynine.xyz/sitemap.xml/tags/Tool/</loc>
-    <lastmod>2025-12-26</lastmod>
+    <lastmod>2025-12-28</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
