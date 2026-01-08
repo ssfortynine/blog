@@ -191,34 +191,6 @@
 
   
   <url>
-    <loc>https://ssfortynine.xyz/sitemap.xml/tags/Tools/</loc>
-    <lastmod>2026-01-08</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://ssfortynine.xyz/sitemap.xml/tags/Obsidian/</loc>
-    <lastmod>2026-01-08</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://ssfortynine.xyz/sitemap.xml/tags/FPGA/</loc>
-    <lastmod>2026-01-08</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://ssfortynine.xyz/sitemap.xml/tags/Rust/</loc>
-    <lastmod>2026-01-08</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://ssfortynine.xyz/sitemap.xml/tags/Turtorial/</loc>
     <lastmod>2026-01-08</lastmod>
     <changefreq>weekly</changefreq>
@@ -234,6 +206,13 @@
   
   <url>
     <loc>https://ssfortynine.xyz/sitemap.xml/tags/Lecture/</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://ssfortynine.xyz/sitemap.xml/tags/FPGA/</loc>
     <lastmod>2026-01-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -275,6 +254,20 @@
   </url>
   
   <url>
+    <loc>https://ssfortynine.xyz/sitemap.xml/tags/Tools/</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://ssfortynine.xyz/sitemap.xml/tags/Obsidian/</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://ssfortynine.xyz/sitemap.xml/tags/NAS-device/</loc>
     <lastmod>2026-01-08</lastmod>
     <changefreq>weekly</changefreq>
@@ -283,6 +276,13 @@
   
   <url>
     <loc>https://ssfortynine.xyz/sitemap.xml/tags/Cpolar/</loc>
+    <lastmod>2026-01-08</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://ssfortynine.xyz/sitemap.xml/tags/Rust/</loc>
     <lastmod>2026-01-08</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
