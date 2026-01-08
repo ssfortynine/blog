@@ -1,0 +1,93 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="X-UA-Compatible" content="IE=edge"><title> NixOS 安装 Synopsys VCS/Verdi（包含安装包） · ssfortynine's Blog</title><meta name="description" content="NixOS 安装 Synopsys VCS/Verdi（包含安装包） - ssfortynine"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="icon" href="/cat.png"><link rel="stylesheet" href="/css/apollodark.css"><link rel="search" type="application/opensearchdescription+xml" href="https://ssfortynine.xyz/sitemap.xml/atom.xml" title="ssfortynine's Blog"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/hexo-math@4.0.0/dist/style.css">
+<!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link rel="alternate" href="/atom.xml" title="ssfortynine's Blog" type="application/atom+xml">
+</head><body><div class="wrap"><header><a href="/" class="logo-link"><img src="/cat.png" alt="logo"></a><ul class="nav nav-list"><li class="nav-list-item"><a href="/" target="_self" class="nav-list-link">BLOG</a></li><li class="nav-list-item"><a href="/archives/" target="_self" class="nav-list-link">ARCHIVE</a></li><li class="nav-list-item"><a href="/tags" target="_self" class="nav-list-link">TAGS</a></li><li class="nav-list-item"><a href="https://github.com/ssfortynine" target="_blank" class="nav-list-link">GITHUB</a></li><li class="nav-list-item"><a href="/atom.xml" target="_self" class="nav-list-link">RSS</a></li></ul></header><main class="container"><div class="post"><article class="post-block"><h1 class="post-title">NixOS 安装 Synopsys VCS/Verdi（包含安装包）</h1><div class="post-info">Jan 8, 2026<span class="post-tags"><a href="/tags/Tools/" class="tag-pill"><span class="hash">#</span><span class="tag-name">Tools</span></a><a href="/tags/Nix/" class="tag-pill"><span class="hash">#</span><span class="tag-name">Nix</span></a><a href="/tags/Synopsys/" class="tag-pill"><span class="hash">#</span><span class="tag-name">Synopsys</span></a><a href="/tags/Simluation/" class="tag-pill"><span class="hash">#</span><span class="tag-name">Simluation</span></a></span></div><div class="post-content"><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>在 <a target="_blank" rel="noopener" href="https://github.com/ssfortynine/Xilinx-nix">xilinx-nix</a> 中提供了安装 Synopsys 工具和 Xilinx 工具的Nix Shell环境</p>
+<p>在安装 Xilinx 或 Synopsys 工具时，您只需通过该脚本处理安装程序的依赖问题。若遇到报错，可根据提示增补缺失的系统包，即可顺利运行下载器或安装向导。在 xilinx-nix 中提供了两个 Nix 安装环境文件。</p>
+<ul>
+<li><code>xilinx_fhs_install.nix</code>：涵盖了 Xilinx 2024.1 下载器及安装程序所需的核心依赖。</li>
+<li><code>vcs_fhs_install.nix</code>：涵盖了运行 SynopsysInstaller 所需的核心依赖，支持根据实际安装版本灵活调整依赖包。</li>
+</ul>
+<p><strong>使用方法</strong>（在 NixOS 或已安装 Nix 的系统中）：</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入 Xilinx 安装环境</span></span><br><span class="line">nix-shell xilinx_fhs_install.nix </span><br><span class="line"><span class="comment"># 进入 Synopsys 安装环境</span></span><br><span class="line">nix-shell vcs_fhs_install.nix</span><br></pre></td></tr></table></figure>
+
+<p><strong>软件版本说明</strong>：</p>
+<ul>
+<li>NixOS: 25.11</li>
+<li>Xilinx Vivado: 2024.1（从官网下载Linux版安装器）</li>
+<li>Synopsys VCS: 2023.03-SP2（根据Xilinx UG900文档中支持的仿真器版本）</li>
+<li>Synopsys Verdi: 2023版本（建议不低于VCS版本，其他版本未测试）</li>
+</ul>
+<p><strong>学习资源</strong>：</p>
+<ul>
+<li>软件下载（无需VIP，高速下载）： <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1uBfHgb0L5AbcC9fC5SSESA?pwd=u14z%E8%8B%A5%E5%A4%B1%E6%95%88%E8%AF%B7%E5%9C%A8%E5%8D%9A%E5%AE%A2%E8%AF%84%E8%AE%BA%E5%8C%BA%E7%95%99%E8%A8%80">百度网盘链接</a>，我会及时更新）</li>
+<li>Synopsys安装包参考，非 NixOS 系统的人可以直接根据提供资料安装：<a target="_blank" rel="noopener" href="https://bbs.eetop.cn/thread-991668-1-1.html">Synopsys vcs verdi 2023 安装包</a></li>
+<li>新版破解工具，主要提供了新版的scl_keygen，这个工具上一个帖子没有：<a target="_blank" rel="noopener" href="https://bbs.eetop.cn/thread-963732-1-1.html">求教synopsys lic制作方式</a></li>
+<li>安装教程参考：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/599939753">Synopsy2020以上版本EDA软件安装教程</a></li>
+</ul>
+<h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>在开始之前，请确保你的安装目录已按以下结构组织好相关文件。这些文件包括了 Synopsys Installer、SCL 授权工具、VCS&#x2F;Verdi 安装包以及 Nix 配置文件（Nix 文件在 github 仓库里，Xilinx 下载器官方网站下载 Linux 版本，其余的在网盘链接内）。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── installer/             <span class="comment"># Synopsys 安装程序</span></span><br><span class="line">│   ├── SynopsysInstaller_v5.8.run</span><br><span class="line">│   └── ...</span><br><span class="line">├── scl/                   <span class="comment"># SCL (Synopsys Common Licensing)</span></span><br><span class="line">│   └── 2021.03/</span><br><span class="line">├── vcs_all_vU-2023.03-SP2/ <span class="comment"># VCS 源码包</span></span><br><span class="line">├── verdi_vV-2023.12-SP2/   <span class="comment"># Verdi 源码包</span></span><br><span class="line">├── 1patch                 <span class="comment"># 补丁工具</span></span><br><span class="line">├── scl_keygen/            <span class="comment"># License 生成器 (Windows 可执行文件)</span></span><br><span class="line">├── FPGAs_AdaptiveSoCs_Unified_2024.1_0522_2023_Lin64.bin <span class="comment"># Xilinx 安装包</span></span><br><span class="line">├── vcs_fhs_install.nix    <span class="comment"># VCS 的 Nix FHS 配置文件</span></span><br><span class="line">└── xilinx_fhs_install.nix <span class="comment"># Xilinx 的 Nix FHS 配置文件</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="安装-Synopsys-VCS-Verdi"><a href="#安装-Synopsys-VCS-Verdi" class="headerlink" title="安装 Synopsys VCS &amp; Verdi"></a>安装 Synopsys VCS &amp; Verdi</h3><h4 id="启动-Nix-FHS-Shell"><a href="#启动-Nix-FHS-Shell" class="headerlink" title="启动 Nix FHS Shell"></a>启动 Nix FHS Shell</h4><p>由于 EDA 工具对系统库（如 <code>libGL, libX11</code>）有极其复杂的依赖，我们使用 <code>vcs_fhs_install.nix</code> 构造一个模拟传统 Linux 目录结构的 Shell 环境：</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nix-shell vcs_fhs_install.nix</span><br></pre></td></tr></table></figure>
+
+<p><em>首次运行会下载大量依赖包，请确保网络环境畅通。</em> 当所需依赖包都下载完之后即可进入 nix-shell 环境。<br><img src="/assets/file-20251224161722988.png" alt="alt text"></p>
+<h4 id="关于安装路径的建议"><a href="#关于安装路径的建议" class="headerlink" title="关于安装路径的建议"></a>关于安装路径的建议</h4><div class="tip"> 
+
+<p>强烈建议将软件安装在 <code>/opt/synopsys</code> 下，而非用户家目录 (<code>~/</code>)。</p>
+</div>
+
+<p><strong>原因分析：</strong><br>在 <code>xilinx-nix</code> 或 <code>chisel-nix</code> 的配置中，通常会包含路径自检逻辑。如果你尝试安装在 <code>$HOME</code> 下，Nix 在构建 Derivation 时，由于 <code>nixbld</code> 用户没有权限读取权限为 <code>700</code> 的用户目录，会导致如下报错：  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">env</span> VC_STATIC_HOME=<span class="string">&#x27;...&#x27;</span> points to unknown location</span><br></pre></td></tr></table></figure>
+
+<p>这个报错来源于 <code>xilinx-nix/vcs-fhs-env.nix</code> 的 <code>profile</code> 中写的那行自检代码：</p>
+<figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ ! -e <span class="string">&quot;<span class="subst">$&#123;vcStaticHome&#125;</span>&quot;</span> ] &amp;&amp; echo <span class="string">&quot;env VC_STATIC_HOME=&#x27;<span class="subst">$&#123;vcStaticHome&#125;</span>&#x27; points to unknown location&quot;</span> &amp;&amp; exit <span class="number">1</span></span><br></pre></td></tr></table></figure>
+
+<p>虽然设置了 <code>__noChroot = true</code> 和 <code>sandbox = relaxed</code>，但这只是允许 Nix 访问外部路径，并不意味着它有权限读取私有家目录。Nix 的构建是由系统用户 <code>nixbld1</code>, <code>nixbld2</code> 等执行，在 NixOS 上，用户家目录（<code>/home/$usrname</code>）的权限默认通常是 <code>700</code>（仅自己可见）。你可以开放用户家目录的读取权限，这样操作会导致一些安全问题，推荐还是把 synopsys 安装到 <code>/opt/...</code> 文件下。</p>
+<div class="tip">
+
+<p>在 chisel-nix 和 xilinx-nix 中都采用了<code>__noChroot=true</code>，Nix 的构建默认是在严格隔离的沙盒中进行的（无网络、无法访问 <code>/usr</code> 等）。但 VCS 在编译的时候需要连接 License Server 检查许可证。如果关在沙盒里会报错，所以要开启这个属性。</p>
+<p>而开启这个属性需要 NixOS 25.11 用户在<code>configuration. Nix</code>中设置<code>nix. Settings. Sandbox=&quot;relaxed&quot;</code>。</p>
+</div>
+#### 执行安装程序
+**1. 初始化 Installer**
+进入 installer 目录并运行命令：
+
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./SynopsysInstaller_v5.8.run</span><br></pre></td></tr></table></figure>
+
+<p>当提示安装目录时，输入 . 安装在当前目录即可。<br><img src="/assets/file-20251224163920393.png" alt="alt text"></p>
+<p><strong>2. 运行 setup.sh</strong>：<br>安装完之后会在本地目录出现一个 <code>setup.sh</code> 脚本，运行这个脚本就可以安装 vcs 和 verdi 到指定文件目录下。图中的步骤需要输入源文件地址，这个指的是 Synopsys 安装包的地址（<code>vcs_all_vU-2023.03-SP2</code> 的地址）。<br><img src="/assets/file-20251224170013139.png" alt="alt text"></p>
+<p>下一个步骤就是填写你的安装地址，这里填写的是 <code>/opt/synopsys</code>，剩下的步骤就是一路 next 到安装完成即可，verdi 的安装步骤和 vcs 一样，这里不多说。</p>
+<p><img src="/assets/file-20251224170500242.png" alt="alt text"></p>
+<p>最后将下载的 scl 文件夹移动到安装目录即可。网盘链接里面附带的 <code>Synopsys.dat</code> 我已经试过，不能使用。建议还是按照破解流程走一遍，生成一份 license。</p>
+<h3 id="破解与-License-生成"><a href="#破解与-License-生成" class="headerlink" title="破解与 License 生成"></a>破解与 License 生成</h3><h4 id="运行-1patch"><a href="#运行-1patch" class="headerlink" title="运行 1patch"></a>运行 <code>1patch</code></h4><p>在 <code>nix-shell</code>环境中，对所有安装好的组件执行 patch。注意权限不足时需使用 <code>sudo</code>（或在 shell 中以 root 运行）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x 1patch</span><br><span class="line">./1patch -ecc /opt/synopsys/vcs/U-2023.03-SP2</span><br><span class="line">./1patch -ecc /opt/synopsys/verdi/V-2023.12-SP2</span><br><span class="line">./1patch -ecc /opt/synopsys/scl/2021.03</span><br></pre></td></tr></table></figure>
+<h4 id="生成-License-Wine"><a href="#生成-License-Wine" class="headerlink" title="生成 License (Wine)"></a>生成 License (Wine)</h4><p>由于 <code>scl_keygen.exe</code> 是 Windows 程序，我们需要在 Nix 中临时调用 Wine（是一个允许类 Unix 操作系统在 X Window System 运行 Microsoft Windows 程式的软件）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nix-shell -p wine</span><br><span class="line">wine scl_keygen.exe</span><br></pre></td></tr></table></figure>
+
+<p><img src="/assets/file-20251224171838241.png" alt="alt text"></p>
+<p>出现 Synopsys License Generator 窗口，即运行成功。这里需要填写 <code>Hostid</code> 和 <code>Hostname</code> 以及 <code>port</code> (27000)，linux 执行命令:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ip address  <span class="comment"># 查看mac地址,mac地址就是hostid</span></span><br><span class="line">hostname 	<span class="comment"># 查看hostname</span></span><br></pre></td></tr></table></figure>
+
+<p>点击 Generate 就会在本目录下生成一个 <code>Synopsys.dat</code> 文件，将该文件放置在 <code>/opt/synopsys/scl</code> 目录下。</p>
+<p><strong>注意</strong>：需要修改 <code>Synopsys.dat</code> 文件中的 <code>snsplmd</code> 路径为你的路径。</p>
+<p><img src="/assets/file-20251224172403496.png" alt="alt text">    </p>
+<p>到此，vcs 和 verdi 已经安装完毕。</p>
+<h3 id="安装-Xilinx-Vivado-Vitis-2024-1"><a href="#安装-Xilinx-Vivado-Vitis-2024-1" class="headerlink" title="安装 Xilinx Vivado&#x2F;Vitis 2024.1"></a>安装 Xilinx Vivado&#x2F;Vitis 2024.1</h3><p>Xilinx 的安装过程相对独立，但体积庞大，建议预留足够的磁盘空间。确保在 Xilinx 官网上下载了 <code>FPGAs_AdaptiveSoCs_Unified_2024.1_0522_2023_Lin64.bin</code> 文件之后，输入 Shell 命令:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入 xilinx 安装环境</span></span><br><span class="line">nix-shell xilinx_fhs_install.nix</span><br><span class="line"><span class="comment"># 给下载器添加运行权限</span></span><br><span class="line"><span class="built_in">chmod</span> +775 ./FPGAs_AdaptiveSoCs_Unified_2024.1_0522_2023_Lin64.bin</span><br><span class="line"><span class="comment"># 运行下载器</span></span><br><span class="line">./FPGAs_AdaptiveSoCs_Unified_2024.1_0522_2023_Lin64.bin</span><br></pre></td></tr></table></figure>
+
+<p>进入 xilinx 的安装环境，给下载器添加运行权限之后就可以运行，安装步骤与 windows 上的操作类似。</p>
+<p>xilinx 环境比较简单，<code>xilinx_fhs_env</code> 环境即可安装与运行，安装完成在 <code>.bashrc </code> (<code>.zshrc </code>) 文件中添加环境变量，同理为了之后在 <code>xilinx-nix</code> 中运行 xilinx，必须要安装在 <code>/opt/..</code> 文件目录下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Xilinx</span></span><br><span class="line"><span class="comment"># 在 xilinx-nix 中需要用到 xilinx 的安装路径</span></span><br><span class="line"><span class="built_in">export</span> XILINX_STATIC_HOME=/opt/Xilinx </span><br><span class="line"><span class="built_in">source</span> /opt/Xilinx/Vitis/2024.1/settings64.sh</span><br><span class="line"><span class="built_in">source</span> /opt/Xilinx/Vivado/2024.1/settings64.sh</span><br><span class="line"><span class="built_in">source</span> /opt/Xilinx/Vitis_HLS/2024.1/settings64.sh</span><br></pre></td></tr></table></figure>
+
+<p>环境配置参考了 nix-environment 中的 xilinx-vitis: <a target="_blank" rel="noopener" href="https://github.com/nix-community/nix-environments/tree/master/envs/xilinx-vitis">https://github.com/nix-community/nix-environments/tree/master/envs/xilinx-vitis</a></p>
+</div><div class="post-footer-tags"><a href="/tags/Tools/" class="tag-pill"><span class="hash">#</span><span class="tag-name">Tools</span></a><a href="/tags/Nix/" class="tag-pill"><span class="hash">#</span><span class="tag-name">Nix</span></a><a href="/tags/Synopsys/" class="tag-pill"><span class="hash">#</span><span class="tag-name">Synopsys</span></a><a href="/tags/Simluation/" class="tag-pill"><span class="hash">#</span><span class="tag-name">Simluation</span></a></div></article></div><aside id="toc" class="post-toc-sidebar"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85"><span class="toc-number">1.</span> <span class="toc-text">安装</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.1.</span> <span class="toc-text">准备工作</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Synopsys-VCS-Verdi"><span class="toc-number">1.2.</span> <span class="toc-text">安装 Synopsys VCS &amp; Verdi</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8-Nix-FHS-Shell"><span class="toc-number">1.2.1.</span> <span class="toc-text">启动 Nix FHS Shell</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%B3%E4%BA%8E%E5%AE%89%E8%A3%85%E8%B7%AF%E5%BE%84%E7%9A%84%E5%BB%BA%E8%AE%AE"><span class="toc-number">1.2.2.</span> <span class="toc-text">关于安装路径的建议</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A0%B4%E8%A7%A3%E4%B8%8E-License-%E7%94%9F%E6%88%90"><span class="toc-number">1.3.</span> <span class="toc-text">破解与 License 生成</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%90%E8%A1%8C-1patch"><span class="toc-number">1.3.1.</span> <span class="toc-text">运行 1patch</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%94%9F%E6%88%90-License-Wine"><span class="toc-number">1.3.2.</span> <span class="toc-text">生成 License (Wine)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Xilinx-Vivado-Vitis-2024-1"><span class="toc-number">1.4.</span> <span class="toc-text">安装 Xilinx Vivado&#x2F;Vitis 2024.1</span></a></li></ol></li></ol></aside><a href="#" onclick="toggleTOC();return false;" class="toc-toggle"></a></main><footer><div class="paginator"><a href="/2025/12/18/Nix-chisel-nix/" class="next">NEXT</a></div><div id="disqus_thread"></div><script>var disqus_shortname = 'ssfortynine seansun';
+var disqus_identifier = '2026/01/08/synopsys-tools-install/';
+var disqus_title = 'NixOS 安装 Synopsys VCS/Verdi（包含安装包）';
+var disqus_url = 'https://ssfortynine.xyz/sitemap.xml/2026/01/08/synopsys-tools-install/';
+(function() {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+})();</script><script id="dsq-count-scr" src="//ssfortynine seansun.disqus.com/count.js" async></script><div class="copyright"><p>© 2025 - 2026 <a href="https://ssfortynine.xyz/sitemap.xml">ssfortynine</a>, powered by <a href="https://hexo.io/" target="_blank">Hexo</a> and <a href="https://github.com/ssfortynine/hexo-theme-apollodark" target="_blank">hexo-theme-apollodark</a>.</p></div></footer></div><script async src="//cdn.bootcss.com/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML" integrity="sha384-crwIf/BuaWM9rM65iM+dWFldgQ1Un8jWZMuh3puxb8TOY9+linwLoI7ZHZT+aekW" crossorigin="anonymous"></script></body></html>

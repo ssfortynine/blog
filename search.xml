@@ -4,6 +4,31 @@
   
     
     <entry>
+      <title>NixOS 安装 Synopsys VCS/Verdi（包含安装包）</title>
+      <link href="/2026/01/08/synopsys-tools-install/"/>
+      <url>/2026/01/08/synopsys-tools-install/</url>
+      
+        <content type="html"><![CDATA[<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>在 <a href="https://github.com/ssfortynine/Xilinx-nix">xilinx-nix</a> 中提供了安装 Synopsys 工具和 Xilinx 工具的Nix Shell环境</p><p>在安装 Xilinx 或 Synopsys 工具时，您只需通过该脚本处理安装程序的依赖问题。若遇到报错，可根据提示增补缺失的系统包，即可顺利运行下载器或安装向导。在 xilinx-nix 中提供了两个 Nix 安装环境文件。</p><ul><li><code>xilinx_fhs_install.nix</code>：涵盖了 Xilinx 2024.1 下载器及安装程序所需的核心依赖。</li><li><code>vcs_fhs_install.nix</code>：涵盖了运行 SynopsysInstaller 所需的核心依赖，支持根据实际安装版本灵活调整依赖包。</li></ul><p><strong>使用方法</strong>（在 NixOS 或已安装 Nix 的系统中）：</p><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入 Xilinx 安装环境</span></span><br><span class="line">nix-shell xilinx_fhs_install.nix </span><br><span class="line"><span class="comment"># 进入 Synopsys 安装环境</span></span><br><span class="line">nix-shell vcs_fhs_install.nix</span><br></pre></td></tr></table></figure><p><strong>软件版本说明</strong>：</p><ul><li>NixOS: 25.11</li><li>Xilinx Vivado: 2024.1（从官网下载Linux版安装器）</li><li>Synopsys VCS: 2023.03-SP2（根据Xilinx UG900文档中支持的仿真器版本）</li><li>Synopsys Verdi: 2023版本（建议不低于VCS版本，其他版本未测试）</li></ul><p><strong>学习资源</strong>：</p><ul><li>软件下载（无需VIP，高速下载）： <a href="https://pan.baidu.com/s/1uBfHgb0L5AbcC9fC5SSESA?pwd=u14z%E8%8B%A5%E5%A4%B1%E6%95%88%E8%AF%B7%E5%9C%A8%E5%8D%9A%E5%AE%A2%E8%AF%84%E8%AE%BA%E5%8C%BA%E7%95%99%E8%A8%80">百度网盘链接</a>，我会及时更新）</li><li>Synopsys安装包参考，非 NixOS 系统的人可以直接根据提供资料安装：<a href="https://bbs.eetop.cn/thread-991668-1-1.html">Synopsys vcs verdi 2023 安装包</a></li><li>新版破解工具，主要提供了新版的scl_keygen，这个工具上一个帖子没有：<a href="https://bbs.eetop.cn/thread-963732-1-1.html">求教synopsys lic制作方式</a></li><li>安装教程参考：<a href="https://zhuanlan.zhihu.com/p/599939753">Synopsy2020以上版本EDA软件安装教程</a></li></ul><h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><p>在开始之前，请确保你的安装目录已按以下结构组织好相关文件。这些文件包括了 Synopsys Installer、SCL 授权工具、VCS&#x2F;Verdi 安装包以及 Nix 配置文件（Nix 文件在 github 仓库里，Xilinx 下载器官方网站下载 Linux 版本，其余的在网盘链接内）。</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">.</span><br><span class="line">├── installer/             <span class="comment"># Synopsys 安装程序</span></span><br><span class="line">│   ├── SynopsysInstaller_v5.8.run</span><br><span class="line">│   └── ...</span><br><span class="line">├── scl/                   <span class="comment"># SCL (Synopsys Common Licensing)</span></span><br><span class="line">│   └── 2021.03/</span><br><span class="line">├── vcs_all_vU-2023.03-SP2/ <span class="comment"># VCS 源码包</span></span><br><span class="line">├── verdi_vV-2023.12-SP2/   <span class="comment"># Verdi 源码包</span></span><br><span class="line">├── 1patch                 <span class="comment"># 补丁工具</span></span><br><span class="line">├── scl_keygen/            <span class="comment"># License 生成器 (Windows 可执行文件)</span></span><br><span class="line">├── FPGAs_AdaptiveSoCs_Unified_2024.1_0522_2023_Lin64.bin <span class="comment"># Xilinx 安装包</span></span><br><span class="line">├── vcs_fhs_install.nix    <span class="comment"># VCS 的 Nix FHS 配置文件</span></span><br><span class="line">└── xilinx_fhs_install.nix <span class="comment"># Xilinx 的 Nix FHS 配置文件</span></span><br></pre></td></tr></table></figure><h3 id="安装-Synopsys-VCS-Verdi"><a href="#安装-Synopsys-VCS-Verdi" class="headerlink" title="安装 Synopsys VCS &amp; Verdi"></a>安装 Synopsys VCS &amp; Verdi</h3><h4 id="启动-Nix-FHS-Shell"><a href="#启动-Nix-FHS-Shell" class="headerlink" title="启动 Nix FHS Shell"></a>启动 Nix FHS Shell</h4><p>由于 EDA 工具对系统库（如 <code>libGL, libX11</code>）有极其复杂的依赖，我们使用 <code>vcs_fhs_install.nix</code> 构造一个模拟传统 Linux 目录结构的 Shell 环境：</p><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nix-shell vcs_fhs_install.nix</span><br></pre></td></tr></table></figure><p><em>首次运行会下载大量依赖包，请确保网络环境畅通。</em> 当所需依赖包都下载完之后即可进入 nix-shell 环境。<br><img src="/assets/file-20251224161722988.png" alt="alt text"></p><h4 id="关于安装路径的建议"><a href="#关于安装路径的建议" class="headerlink" title="关于安装路径的建议"></a>关于安装路径的建议</h4><div class="tip"> <p>强烈建议将软件安装在 <code>/opt/synopsys</code> 下，而非用户家目录 (<code>~/</code>)。</p></div><p><strong>原因分析：</strong><br>在 <code>xilinx-nix</code> 或 <code>chisel-nix</code> 的配置中，通常会包含路径自检逻辑。如果你尝试安装在 <code>$HOME</code> 下，Nix 在构建 Derivation 时，由于 <code>nixbld</code> 用户没有权限读取权限为 <code>700</code> 的用户目录，会导致如下报错：  </p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">env</span> VC_STATIC_HOME=<span class="string">&#x27;...&#x27;</span> points to unknown location</span><br></pre></td></tr></table></figure><p>这个报错来源于 <code>xilinx-nix/vcs-fhs-env.nix</code> 的 <code>profile</code> 中写的那行自检代码：</p><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[ ! -e <span class="string">&quot;<span class="subst">$&#123;vcStaticHome&#125;</span>&quot;</span> ] &amp;&amp; echo <span class="string">&quot;env VC_STATIC_HOME=&#x27;<span class="subst">$&#123;vcStaticHome&#125;</span>&#x27; points to unknown location&quot;</span> &amp;&amp; exit <span class="number">1</span></span><br></pre></td></tr></table></figure><p>虽然设置了 <code>__noChroot = true</code> 和 <code>sandbox = relaxed</code>，但这只是允许 Nix 访问外部路径，并不意味着它有权限读取私有家目录。Nix 的构建是由系统用户 <code>nixbld1</code>, <code>nixbld2</code> 等执行，在 NixOS 上，用户家目录（<code>/home/$usrname</code>）的权限默认通常是 <code>700</code>（仅自己可见）。你可以开放用户家目录的读取权限，这样操作会导致一些安全问题，推荐还是把 synopsys 安装到 <code>/opt/...</code> 文件下。</p><div class="tip"><p>在 chisel-nix 和 xilinx-nix 中都采用了<code>__noChroot=true</code>，Nix 的构建默认是在严格隔离的沙盒中进行的（无网络、无法访问 <code>/usr</code> 等）。但 VCS 在编译的时候需要连接 License Server 检查许可证。如果关在沙盒里会报错，所以要开启这个属性。</p><p>而开启这个属性需要 NixOS 25.11 用户在<code>configuration. Nix</code>中设置<code>nix. Settings. Sandbox=&quot;relaxed&quot;</code>。</p></div>#### 执行安装程序**1. 初始化 Installer**进入 installer 目录并运行命令：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./SynopsysInstaller_v5.8.run</span><br></pre></td></tr></table></figure><p>当提示安装目录时，输入 . 安装在当前目录即可。<br><img src="/assets/file-20251224163920393.png" alt="alt text"></p><p><strong>2. 运行 setup.sh</strong>：<br>安装完之后会在本地目录出现一个 <code>setup.sh</code> 脚本，运行这个脚本就可以安装 vcs 和 verdi 到指定文件目录下。图中的步骤需要输入源文件地址，这个指的是 Synopsys 安装包的地址（<code>vcs_all_vU-2023.03-SP2</code> 的地址）。<br><img src="/assets/file-20251224170013139.png" alt="alt text"></p><p>下一个步骤就是填写你的安装地址，这里填写的是 <code>/opt/synopsys</code>，剩下的步骤就是一路 next 到安装完成即可，verdi 的安装步骤和 vcs 一样，这里不多说。</p><p><img src="/assets/file-20251224170500242.png" alt="alt text"></p><p>最后将下载的 scl 文件夹移动到安装目录即可。网盘链接里面附带的 <code>Synopsys.dat</code> 我已经试过，不能使用。建议还是按照破解流程走一遍，生成一份 license。</p><h3 id="破解与-License-生成"><a href="#破解与-License-生成" class="headerlink" title="破解与 License 生成"></a>破解与 License 生成</h3><h4 id="运行-1patch"><a href="#运行-1patch" class="headerlink" title="运行 1patch"></a>运行 <code>1patch</code></h4><p>在 <code>nix-shell</code>环境中，对所有安装好的组件执行 patch。注意权限不足时需使用 <code>sudo</code>（或在 shell 中以 root 运行）：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">chmod</span> +x 1patch</span><br><span class="line">./1patch -ecc /opt/synopsys/vcs/U-2023.03-SP2</span><br><span class="line">./1patch -ecc /opt/synopsys/verdi/V-2023.12-SP2</span><br><span class="line">./1patch -ecc /opt/synopsys/scl/2021.03</span><br></pre></td></tr></table></figure><h4 id="生成-License-Wine"><a href="#生成-License-Wine" class="headerlink" title="生成 License (Wine)"></a>生成 License (Wine)</h4><p>由于 <code>scl_keygen.exe</code> 是 Windows 程序，我们需要在 Nix 中临时调用 Wine（是一个允许类 Unix 操作系统在 X Window System 运行 Microsoft Windows 程式的软件）：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">nix-shell -p wine</span><br><span class="line">wine scl_keygen.exe</span><br></pre></td></tr></table></figure><p><img src="/assets/file-20251224171838241.png" alt="alt text"></p><p>出现 Synopsys License Generator 窗口，即运行成功。这里需要填写 <code>Hostid</code> 和 <code>Hostname</code> 以及 <code>port</code> (27000)，linux 执行命令:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ip address  <span class="comment"># 查看mac地址,mac地址就是hostid</span></span><br><span class="line">hostname <span class="comment"># 查看hostname</span></span><br></pre></td></tr></table></figure><p>点击 Generate 就会在本目录下生成一个 <code>Synopsys.dat</code> 文件，将该文件放置在 <code>/opt/synopsys/scl</code> 目录下。</p><p><strong>注意</strong>：需要修改 <code>Synopsys.dat</code> 文件中的 <code>snsplmd</code> 路径为你的路径。</p><p><img src="/assets/file-20251224172403496.png" alt="alt text">    </p><p>到此，vcs 和 verdi 已经安装完毕。</p><h3 id="安装-Xilinx-Vivado-Vitis-2024-1"><a href="#安装-Xilinx-Vivado-Vitis-2024-1" class="headerlink" title="安装 Xilinx Vivado&#x2F;Vitis 2024.1"></a>安装 Xilinx Vivado&#x2F;Vitis 2024.1</h3><p>Xilinx 的安装过程相对独立，但体积庞大，建议预留足够的磁盘空间。确保在 Xilinx 官网上下载了 <code>FPGAs_AdaptiveSoCs_Unified_2024.1_0522_2023_Lin64.bin</code> 文件之后，输入 Shell 命令:</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 进入 xilinx 安装环境</span></span><br><span class="line">nix-shell xilinx_fhs_install.nix</span><br><span class="line"><span class="comment"># 给下载器添加运行权限</span></span><br><span class="line"><span class="built_in">chmod</span> +775 ./FPGAs_AdaptiveSoCs_Unified_2024.1_0522_2023_Lin64.bin</span><br><span class="line"><span class="comment"># 运行下载器</span></span><br><span class="line">./FPGAs_AdaptiveSoCs_Unified_2024.1_0522_2023_Lin64.bin</span><br></pre></td></tr></table></figure><p>进入 xilinx 的安装环境，给下载器添加运行权限之后就可以运行，安装步骤与 windows 上的操作类似。</p><p>xilinx 环境比较简单，<code>xilinx_fhs_env</code> 环境即可安装与运行，安装完成在 <code>.bashrc </code> (<code>.zshrc </code>) 文件中添加环境变量，同理为了之后在 <code>xilinx-nix</code> 中运行 xilinx，必须要安装在 <code>/opt/..</code> 文件目录下：</p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Xilinx</span></span><br><span class="line"><span class="comment"># 在 xilinx-nix 中需要用到 xilinx 的安装路径</span></span><br><span class="line"><span class="built_in">export</span> XILINX_STATIC_HOME=/opt/Xilinx </span><br><span class="line"><span class="built_in">source</span> /opt/Xilinx/Vitis/2024.1/settings64.sh</span><br><span class="line"><span class="built_in">source</span> /opt/Xilinx/Vivado/2024.1/settings64.sh</span><br><span class="line"><span class="built_in">source</span> /opt/Xilinx/Vitis_HLS/2024.1/settings64.sh</span><br></pre></td></tr></table></figure><p>环境配置参考了 nix-environment 中的 xilinx-vitis: <a href="https://github.com/nix-community/nix-environments/tree/master/envs/xilinx-vitis">https://github.com/nix-community/nix-environments/tree/master/envs/xilinx-vitis</a></p>]]></content>
+      
+      
+      
+        <tags>
+            
+            <tag> Tools </tag>
+            
+            <tag> Nix </tag>
+            
+            <tag> Synopsys </tag>
+            
+            <tag> Simluation </tag>
+            
+        </tags>
+      
+    </entry>
+    
+    
+    
+    <entry>
       <title>解析基于 Nix 的 Chisel 开发基础设施 Chisel-nix</title>
       <link href="/2025/12/18/Nix-chisel-nix/"/>
       <url>/2025/12/18/Nix-chisel-nix/</url>
@@ -11,6 +36,16 @@
         <content type="html"><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>传统的电子设计自动化（EDA）环境长期面临“环境熵增”的困境：闭源商业工具对特定 Linux 发行版的依赖、多版本编译器（JDK&#x2F;LLVM）的冲突以及复杂的许可证（License）管理，导致开发环境难以迁移与复现。</p><p>最近研究了 <strong>Chisel-nix</strong> 项目，它利用 Nix 这一声明式包管理器，为 Chisel 硬件开发构建了一套极为现代化的基础设施。</p><hr><h2 id="声明式环境"><a href="#声明式环境" class="headerlink" title="声明式环境"></a>声明式环境</h2><p>Chisel-nix 的核心在于将<strong>硬件设计流程函数式化</strong>。从源码编译到最终的仿真报告，每一个步骤都是 Nix 依赖图中的一个节点。</p><p>针对商业 EDA 工具（如 Synopsys VCS, Cadence JasperGold）深度依赖传统 Linux 文件系统标准（FHS）的问题，Chisel-nix 采用了 <code>buildFHSEnv</code> 技术：</p><ul><li><strong>命名空间隔离</strong>：在 Nix Store 的只读环境中虚拟化出 <code>/bin, /lib, /usr </code>等标准路径。</li><li><strong>Impure 状态注入</strong>：利用 <code>getEnv&#39;</code>函数与 <code>--impure</code> 参数，在保证构建逻辑一致的前提下，动态注入宿主机的 License 路径。</li><li><strong>兼容性层</strong>：针对旧版商业软件，通过 Nix 强制挂载 <code>libxcrypt-legacy</code> 等过时库，实现了在现代 NixOS 系统上运行陈旧二进制文件的能力。</li></ul><h2 id="跨域参数同步"><a href="#跨域参数同步" class="headerlink" title="跨域参数同步"></a>跨域参数同步</h2><p>在复杂的 DPI（Direct Programming Interface）仿真中，最常见的 Bug 来源于软硬件参数的不一致——例如硬件位宽改成了 64 位，但 C++&#x2F;Rust 编写的测试平台仍在使用 32 位。</p><p>Chisel-nix 引入了一个非常优雅的<strong>参数同步机制</strong>：</p><ol><li><strong>统一配置</strong>：在 <code>configs/*.json</code> 中定义所有核心参数（位宽、超时、时钟频率）。</li><li><strong>编译时注入</strong>：Nix 在构建流水线中，将这些 JSON 参数转化为环境变量。</li><li><strong>自动对齐</strong>：Chisel 侧读取参数生成电路；同时，Rust 编写的 DPI 库在编译时通过 <code>env!</code>宏捕获这些变量。</li></ol><p>这意味着你只需修改一处 JSON，整个软硬件环境就会自动重构并保持对齐。这种设计极大地降低了系统集成时的低级错误率</p><h2 id="细粒度的流水线"><a href="#细粒度的流水线" class="headerlink" title="细粒度的流水线"></a>细粒度的流水线</h2><p>Chisel-nix 将原本笨重的硬件构建流程拆解为多个细粒度的节点，这更像是在用软件工程的思维管理硬件：</p><ul><li><strong>中间表示（IR）的价值</strong>：它不仅仅是从 Chisel 直接跳到 Verilog，而是经过了 FIRRTL 到 MLIR (CIRCT) 的深度变换。项目将 <code>elaborate</code>、<code>mlirbc</code>、<code>rtl</code> 分别定义为独立的 Derivations。</li><li><strong>按需开启的验证层</strong>：通过 Chisel 的 Layers 特性，开发者可以在 <code>rtl.nix</code> 中动态决定是否开启 Assert 或 Probe。这允许我们在不改动核心逻辑代码的情况下，通过 Nix 参数轻松切换“生产模式”和“调试模式”。</li></ul><h2 id="现代化的验证栈：Rust-DPI-商业工具"><a href="#现代化的验证栈：Rust-DPI-商业工具" class="headerlink" title="现代化的验证栈：Rust + DPI + 商业工具"></a>现代化的验证栈：Rust + DPI + 商业工具</h2><p>Chisel-nix 提供了统一的接口来调用开源（Verilator）与商业（VCS）仿真器。</p><ul><li><strong>高效的 Rust DPI</strong>：利用 Rust 强大的类型系统和内存安全性编写仿真驱动，相比 C++ 更加稳健。    </li><li><strong>商业工具的完美集成</strong>：通过封装脚本（Wrapper），它解决了商业工具运行时需要写权限的问题，并集成了 Verdi 调试数据库（KDB）和覆盖率报告生成。</li><li><strong>冒烟测试集成</strong>：每一个仿真器的构建都伴随着一个内嵌的测试作业。这种“构建即测试”的理念，保证了产出的二进制文件永远是可用的。</li></ul><h2 id="拓展：什么是-passthru"><a href="#拓展：什么是-passthru" class="headerlink" title="拓展：什么是 passthru"></a>拓展：什么是 <code>passthru</code></h2><p>在 Nix 中，<code>stdenv.mkDerivation</code> 是构建软件包的核心。大多数人更注意的是它的 <code>buildPhase</code> 或 <code>installPhase</code> 参数，但在处理像 Chisel-nix 这样复杂的硬件项目时，<code>passthru</code> 的属性提高了整个流水线的灵活性。</p><p>在 Chisel-nix 中，<code>passthru</code> 属性完成了三个任务：解决硬件开发中的元数据传递、依赖更新和自动化测试。</p><div class="tip"><h4 id="什么是passthru？"><a href="#什么是passthru？" class="headerlink" title="什么是passthru？"></a>什么是<code>passthru</code>？</h4><p>简单来说，<code>passthru</code> 是一个存放“非构建必需数据”的仓库。它里面的内容不会影响软件包的哈希值（即不触发重新编译），但它允许我们将相关的工具、测试脚本或配置参数与主程序打包在一起。</p></div><h3 id="开发者工具链的生命周期管理"><a href="#开发者工具链的生命周期管理" class="headerlink" title="开发者工具链的生命周期管理"></a>开发者工具链的生命周期管理</h3><p>在 Nix中，涉及外部依赖的滚动更新（如 Scala 的 Ivy 依赖）为了保证 Nix 构建的确定性，我们需要手动维护一个锁文件（lock file）。Chisel-nix 通过 <code>passthru.bump</code> 将特定于包的维护工具直接封装在构件定义。</p><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">passthru</span> = &#123;</span><br><span class="line">  <span class="attr">bump</span> = writeShellApplication &#123;</span><br><span class="line">    <span class="attr">name</span> = <span class="string">&quot;bump-gcd-mill-lock&quot;</span>;</span><br><span class="line">    <span class="attr">text</span> = <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="string">      mif run -p &quot;<span class="subst">$&#123;src&#125;</span>&quot; -o ./nix/dependencies/locks/gcd-lock.nix &quot;$@&quot;</span></span><br><span class="line"><span class="string">    &#x27;&#x27;</span>;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p>此举将复杂的依赖更新逻辑（如计算 Maven 坐标的 SHA-256）从宿主系统环境抽象至包级别。开发者无需安装特定的更新器，仅通过 <code>nix run .#package.bump</code> 即可触发闭环的依赖自更新。这种“包即工具箱”的设计，极大地提升了开发者的工作效率。</p><h3 id="跨阶段元数据交互与参数同步"><a href="#跨阶段元数据交互与参数同步" class="headerlink" title="跨阶段元数据交互与参数同步"></a>跨阶段元数据交互与参数同步</h3><p>在 Chisel-nix 中硬件流水线采用长链条的变换过程（Scala 编译 -&gt; Elaborate -&gt; MLIR 优化 -&gt; RTL 生成 -&gt; 仿真)。为了让后续步骤知道前一步生成了什么，Chisel-nix 利用 <code>passthru</code> 传递元数据。例如，在 <code>elaborate.nix</code> 中：</p><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">passthru</span> = &#123;</span><br><span class="line">  <span class="keyword">inherit</span> elaborator;</span><br><span class="line">  <span class="keyword">inherit</span> (elaborator) target; <span class="comment"># 将 &quot;GCD&quot; 或 &quot;GCDTestBench&quot; 传给下游</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure><p>当后续的 <code>rtl.nix</code> 拿到 <code>elaborate</code> 的输出时，它可以直接通过 <code>elaborate.target</code> 知道顶层模块的名字。这种方式避免了在每个脚本里重复定义参数，保证了整个流水线在不同阶段对“设计目标”的认知是高度统一的。</p><h3 id="自动化验证与冒烟测试"><a href="#自动化验证与冒烟测试" class="headerlink" title="自动化验证与冒烟测试"></a>自动化验证与冒烟测试</h3><p>在商业 EDA 流程中，我们经常遇到仿真器编译通过但运行崩溃的情况。Chisel-nix 在 <code>vcs.nix</code> 或 <code>verilated.nix</code> 中利用 <code>passthru.tests</code> 嵌入了自动化验证：</p><figure class="highlight nix"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">passthru.tests.<span class="attr">simple-sim</span> = runCommand <span class="string">&quot;<span class="subst">$&#123;binName&#125;</span>-test&quot;</span> &#123; ... &#125; <span class="string">&#x27;&#x27;</span></span><br><span class="line"><span class="string">  <span class="subst">$&#123;finalAttr.finalPackage&#125;</span>/bin/<span class="subst">$&#123;binName&#125;</span> # 直接运行刚编译出的仿真器</span></span><br><span class="line"><span class="string">  # 检查输出结果并保存至 $out</span></span><br><span class="line"><span class="string">&#x27;&#x27;</span>;</span><br></pre></td></tr></table></figure><ul><li>每当你构建一个仿真器，Nix 都会通过这个属性构建立即进行冒烟测试。如果由于链接库或 License 问题导致仿真器无法跑通，Nix 会直接报错并拒绝产出这个包。这种做法就是将<strong>持续集成（CI）逻辑下放到包定义层面</strong>。</li></ul><h3 id="商业-EDA-环境的透明化"><a href="#商业-EDA-环境的透明化" class="headerlink" title="商业 EDA 环境的透明化"></a>商业 EDA 环境的透明化</h3><p>闭源 EDA 工具通常运行在复杂的 FHS（Filesystem Hierarchy Standard）环境中，其内部逻辑对开发者而言往往是“黑盒”。</p><p>Chisel-nix 通过 <code>passthru</code> 将 <code>vcs-fhs-env</code> 等环境定义显式暴露。这一设计方便开发者调试，通过访问 <code>passthru</code> 导出的环境定义快速审查虚拟环境中的库文件组成，从而在闭源二进制程序发生段错误（Segmentation Fault）时，能够精确地进行环境回溯与路径修复。</p><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>Chisel-nix 为Chisel 定制了一个<strong>高度自动化且具备强约束力</strong>的协作流程。新学习 Chisel 的开发者和团队无需为环境苦恼，在几秒钟内就可以获得与资深工程师完全一致的开发环境。而且 Chisel-nix 作为一个优秀且有创新的 Nix 框架，具有一定的学习价值。</p>]]></content>
       
       
+      
+        <tags>
+            
+            <tag> Chisel </tag>
+            
+            <tag> Nix </tag>
+            
+            <tag> DEV </tag>
+            
+        </tags>
       
     </entry>
     
@@ -29,6 +64,8 @@
             
             <tag> Rust </tag>
             
+            <tag> Network </tag>
+            
         </tags>
       
     </entry>
@@ -46,7 +83,7 @@
       
         <tags>
             
-            <tag> Conference </tag>
+            <tag> Papers </tag>
             
         </tags>
       
@@ -65,7 +102,7 @@
       
         <tags>
             
-            <tag> Conference </tag>
+            <tag> Papers </tag>
             
         </tags>
       
@@ -84,7 +121,7 @@
       
         <tags>
             
-            <tag> Conference </tag>
+            <tag> Papers </tag>
             
         </tags>
       
@@ -103,7 +140,7 @@
       
         <tags>
             
-            <tag> Conference </tag>
+            <tag> Papers </tag>
             
         </tags>
       
@@ -122,7 +159,7 @@
       
         <tags>
             
-            <tag> Conference </tag>
+            <tag> Papers </tag>
             
         </tags>
       
@@ -141,7 +178,7 @@
       
         <tags>
             
-            <tag> Conference </tag>
+            <tag> Turtorial </tag>
             
         </tags>
       
@@ -160,7 +197,7 @@
       
         <tags>
             
-            <tag> Conference </tag>
+            <tag> Turtorial </tag>
             
         </tags>
       
@@ -179,7 +216,7 @@
       
         <tags>
             
-            <tag> Conference </tag>
+            <tag> Lecture </tag>
             
         </tags>
       
@@ -198,7 +235,7 @@
       
         <tags>
             
-            <tag> Conference </tag>
+            <tag> Lecture </tag>
             
         </tags>
       
@@ -217,7 +254,7 @@
       
         <tags>
             
-            <tag> Conference </tag>
+            <tag> Lecture </tag>
             
         </tags>
       
@@ -238,6 +275,8 @@
             
             <tag> Tools </tag>
             
+            <tag> Nix </tag>
+            
         </tags>
       
     </entry>
@@ -255,7 +294,13 @@
       
         <tags>
             
+            <tag> Tools </tag>
+            
             <tag> Obsidian </tag>
+            
+            <tag> NAS device </tag>
+            
+            <tag> Cpolar </tag>
             
         </tags>
       
@@ -276,6 +321,10 @@
             
             <tag> FPGA </tag>
             
+            <tag> verilog </tag>
+            
+            <tag> IC </tag>
+            
         </tags>
       
     </entry>
@@ -293,7 +342,13 @@
       
         <tags>
             
-            <tag> Tool </tag>
+            <tag> Tools </tag>
+            
+            <tag> Archlinux </tag>
+            
+            <tag> Termius </tag>
+            
+            <tag> Zerotier </tag>
             
         </tags>
       
